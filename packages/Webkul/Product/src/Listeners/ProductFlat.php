@@ -68,6 +68,7 @@ class ProductFlat
         'date' => 'date',
         'file' => 'text',
         'image' => 'text',
+        'checkbox' => 'text'
     ];
 
     /**
@@ -102,7 +103,7 @@ class ProductFlat
      */
     public function afterAttributeCreatedUpdated($attribute)
     {
-        if(! $attribute->is_user_defined || $attribute->is_visible_on_front) {
+        if (! $attribute->is_user_defined || $attribute->is_visible_on_front) {
             return false;
         }
 
