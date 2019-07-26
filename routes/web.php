@@ -10,3 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['middleware' => ['web']], function () {
+    Route::prefix('card/altnasyr')->group(function () {
+        Route::get('/redirect', 'AltynAsyrController@redirect')->name('card.altynasyr.redirect');
+        Route::get('/success', 'AltynAsyrController@success')->name('card.altynasyr.success');
+    });
+});
