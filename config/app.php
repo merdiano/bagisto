@@ -245,6 +245,9 @@ return [
         Webkul\Tax\Providers\TaxServiceProvider::class,
         Webkul\API\Providers\APIServiceProvider::class,
         Webkul\Discount\Providers\DiscountServiceProvider::class,
+
+        //Local payment methods
+        Payment\Providers\LocalPaymentServiceProvider::class,
     ],
 
     /*
