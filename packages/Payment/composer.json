@@ -2,7 +2,6 @@
     "name": "merdan/payment",
     "description": "Local payment methods",
     "require": {
-        "guzzlehttp/guzzle": "^6.3@dev"
     },
     "license": "MIT",
     "authors": [
