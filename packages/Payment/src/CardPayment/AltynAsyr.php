@@ -47,7 +47,7 @@ class AltynAsyr extends Payment
             'form_params' => [
                 'userName' => $this->getConfigData('business_account'),//'103161020074',
                 'password' => $this->getConfigData('account_password'),//'E12wKp7a7vD8',
-                'sessionTimeoutSecs' => $lifeTime * 60, //(600 sec)
+                'sessionTimeoutSecs' => $lifeTime * 6, //(600 sec)
                 'orderNumber' =>$cart->id . Carbon::now()->timestamp,
                 'currency' => 934,
                 'language' => 'ru',
@@ -71,7 +71,7 @@ class AltynAsyr extends Payment
 
     public function getOrderStatus(){
         $client = $this->getApiClient();
-        $payment = $this->getCart()->payment();
+        $payment = $this->getCart()->payment;
 
         $params = [
             'form_params' => [
@@ -81,7 +81,7 @@ class AltynAsyr extends Payment
             ]
         ];
 
-        return json_decode($client->post('getOrderStatus.do',$params),true);
+        return json_decode($client->post('getOrderStatus.do',$params)->getBody(),true);
 
     }
 }

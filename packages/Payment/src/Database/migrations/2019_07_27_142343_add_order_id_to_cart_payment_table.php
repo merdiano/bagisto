@@ -15,7 +15,7 @@ class AddOrderIdToCartPaymentTable extends Migration
     {
         Schema::table('cart_payment', function (Blueprint $table) {
             $table->string('orderId')->nullable();
-            $table->string('paymentFormUrl')->nullable();
+            $table->unsignedSmallInteger('OrderStatus')->nullable();
             //
         });
     }
@@ -29,7 +29,7 @@ class AddOrderIdToCartPaymentTable extends Migration
     {
         Schema::table('cart_payment', function (Blueprint $table) {
             $table->dropColumn('orderId');
-            $table->dropColumn('paymentFormUrl');
+            $table->dropColumn('OrderStatus');
         });
     }
 }
