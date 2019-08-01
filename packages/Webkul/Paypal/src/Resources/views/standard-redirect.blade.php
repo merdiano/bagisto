@@ -17,4 +17,4 @@
     <script type="text/javascript">
         document.getElementById("paypal_standard_checkout").submit();
     </script>
-</body>s
+</body>

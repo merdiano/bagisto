@@ -58,12 +58,11 @@ class AltynAsyrController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function success(){
-        try{
+        try {
             $result = $this->altynAsyr->getOrderStatus();
 
-            if($result['ErrorCode'] == 0 ){
-
-                if($result['OrderStatus'] == 2){
+            if ($result['ErrorCode'] == 0) {
+                if ($result['OrderStatus'] == 2) {
                     $order = $this->orderRepository->create(Cart::prepareDataForOrder());
 
                     Cart::deActivateCart();
@@ -71,30 +70,20 @@ class AltynAsyrController extends Controller
                     session()->flash('order', $order);
 
                     return redirect()->route('shop.checkout.success');
-                }elseif($result['OrderStatus'] == 0 || $result['OrderStatus'] == 1){
-                    //todo customer should refresh the order status or make event to check status later
-                    session()->flash('error','Bank didnt processed payment yet. Please wait!');
-                }
-                else{
-                    //todo implement other orderstatus states
-                    session()->flash('error','Bank didnt processed payment.');
+                } else {
+                    return view('payment::order-status')->with('cart', $this->altynAsyr->getCart());
                 }
 
-            }
-            elseif ($result['ErrorCode'] == 2){
-                $message = '. Hasabyny barla yeterli pul yokdyr yada cvc kodynyzy yalnysh giren bolmagynyz mumkin!';
-                session()->flash('error',$result['ErrorMessage'].$message);
-            }
-            else{
-                //todo implement other error code state
-                $message = 'session expired';
-                session()->flash('error',$result['ErrorMessage'].$message);
+            } else {
+                $message = "Hasabyňyzda ýeterli pul ýok. Ýa-da kart maglumatlaryňyz dogry däl.";
+                session()->flash('error', $message);
             }
         }
         catch (\Exception $exception){
             //todo check Exception type if it is not connection exception display exception message else bank bn aragat...
-            session()->flash('error', $exception->getMessage());//'Bank bilen aragatnaşykda säwlik ýüze çykdy. Ýene birsalymdan täzeden synanşyp görmegiňizi haýş edýäris!');
-
+            $message = 'Bank bilen aragatnaşykda säwlik ýüze çykdy. Ýene birsalymdan täzeden synanşyp görmegiňizi haýş edýäris!';
+//            dd($exception);
+            session()->flash('error',$message);
         }
         return redirect()->route('shop.checkout.cart.index');
     }
@@ -105,9 +94,15 @@ class AltynAsyrController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function cancel(){
-        $message = '. Hasabyny barla yeterli pul yokdyr yada cvc kodynyzy yalnysh giren bolmagynyz mumkin!';
-        session()->flash('error', 'AltynAsyr card payment has been canceled'.$message);
+        $message = "Hasabyňyzda ýeterli pul ýok. Ýa-da kart maglumatlaryňyz dogry däl.";
+        session()->flash('error', $message);
 
         return redirect()->route('shop.checkout.cart.index');
+    }
+
+
+    public function status(){
+
+        return view('payment::order-status');
     }
 }
