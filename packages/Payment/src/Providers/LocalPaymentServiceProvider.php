@@ -10,6 +10,7 @@ class LocalPaymentServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/../Http/routes.php');
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'payment');
         $this->loadMigrationsFrom(__DIR__ . '/../Database/migrations');
+        $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'payment');
     }
     public function register()
     {

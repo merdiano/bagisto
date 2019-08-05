@@ -12,9 +12,9 @@
                 <div class="form-container">
                     {{--@if($result['ErrorMessage'])--}}
                     <div class="alert alert-error mb-20">
-                        <strong class="text-success">Siziň tölegiňiziň üstünde işlenilýär.... Egerde sahypa täzelenmese. Aşakdaky dügmä basmagyňyzy haýyş edýäris. </strong>
+                        <strong class="text-success">@lang('payment::messages.processing_payment')</strong>
                         <form method="GET" action="{{route('paymentmethod.altynasyr.success')}}">
-                            <button type="submit" name="orderId" value="{{$cart->payment->order_id}}">Täzele</button>
+                            <button type="submit" name="orderId" value="{{$cart->payment->order_id}}">@lang('payment::messages.refresh')</button>
                         </form>
                     </div>
                     {{--@endif--}}
