@@ -2,6 +2,7 @@
 
 namespace Payment\Http\Controllers;
 
+use GuzzleHttp\Exception\ConnectException;
 use Webkul\Checkout\Facades\Cart;
 use Payment\CardPayment\AltynAsyr;
 use Webkul\Sales\Repositories\OrderRepository;
@@ -46,7 +47,7 @@ class AltynAsyrController extends Controller
 
         }catch (\Exception $exception){
             //todo Check exception if not connection excepion redirect to login ore somewhere if session expired
-            session()->flash('error', $exception->getMessage());//'Bank bilen aragatnaşykda säwlik ýüze çykdy. Ýene birsalymdan täzeden synanşyp görmegiňizi haýş edýäris!');
+            session()->flash('error', $exception->getMessage());
         }
 
         return redirect()->route('shop.checkout.cart.index');
@@ -64,7 +65,7 @@ class AltynAsyrController extends Controller
             if ($result['ErrorCode'] == 0) {
                 if ($result['OrderStatus'] == 2) {
                     $order = $this->orderRepository->create(Cart::prepareDataForOrder());
-
+                    //todo save card details to cart->payment
                     Cart::deActivateCart();
 
                     session()->flash('order', $order);
@@ -75,15 +76,14 @@ class AltynAsyrController extends Controller
                 }
 
             } else {
-                $message = "Hasabyňyzda ýeterli pul ýok. Ýa-da kart maglumatlaryňyz dogry däl.";
-                session()->flash('error', $message);
+                session()->flash('error', trans('payment.unsuccessfull'));
             }
         }
+        catch (ConnectException $connectException){
+            session()->flash('error',trans('payment::messages.connection_failed'));
+        }
         catch (\Exception $exception){
-            //todo check Exception type if it is not connection exception display exception message else bank bn aragat...
-            $message = 'Bank bilen aragatnaşykda säwlik ýüze çykdy. Ýene birsalymdan täzeden synanşyp görmegiňizi haýş edýäris!';
-//            dd($exception);
-            session()->flash('error',$message);
+            session()->flash('error',trans('payment::messages.session_expired'));
         }
         return redirect()->route('shop.checkout.cart.index');
     }
@@ -94,12 +94,10 @@ class AltynAsyrController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function cancel(){
-        $message = "Hasabyňyzda ýeterli pul ýok. Ýa-da kart maglumatlaryňyz dogry däl.";
-        session()->flash('error', $message);
+        session()->flash('error', trans('payment::messages.unsuccessfull'));
 
         return redirect()->route('shop.checkout.cart.index');
     }
-
 
     public function status(){
 
