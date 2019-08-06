@@ -61,7 +61,7 @@
             }
 
             if (! isset($field['options'])) {
-                $field['options'] = [['title' => 'No', 'value' => 0],['title' => 'Yes', 'value' => 1]];
+                $field['options'] = '';
             }
 
             $selectedOption = core()->getConfigData($name) ?? '';
@@ -73,7 +73,7 @@
             :validations = "'{{ $validations }}'"
             :depand = "'{{ $firstField }}[{{ $secondField }}][{{ $thirdField }}][{{ $depandField }}]'"
             :value = "'{{ $depandValue }}'"
-            :field_name = "'{{ $field['title'] }}'"
+            :field_name = "'{{ trans($field['title']) }}'"
             :channel_loacle = "'{{ $channel_locale }}'"
             :result = "'{{ $selectedOption }}'"
         ></depands>
@@ -400,10 +400,13 @@
             <span class="locale"> [@{{ channel_loacle }}] </span>
         </label>
 
-        <select v-validate= "validations" class="control" :id = "name" :name = "name" v-model="this.result"
+        <select v-if="this.options.length" v-validate= "validations" class="control" :id = "name" :name = "name" v-model="this.result"
         :data-vv-as="field_name">
             <option v-for='(option, index) in this.options' :value="option.value"> @{{ option.title }} </option>
         </select>
+
+        <input v-else type="text"  class="control" v-validate= "validations" :id = "name" :name = "name" v-model="this.result"
+        :data-vv-as="field_name">
 
         <span class="control-error" v-if="errors.has(name)">
             @{{ errors.first(name) }}
@@ -435,16 +438,16 @@
                 this_this.isRequire = true;
             }
 
-            var dependentElement = document.getElementById(this_this.depand);
-            var depandValue = this_this.value;
-
-            if (depandValue == 'true') {
-                depandValue = 1;
-            } else if (depandValue == 'false') {
-                depandValue = 0;
-            }
-
             $(document).ready(function(){
+                var dependentElement = document.getElementById(this_this.depand);
+                var depandValue = this_this.value;
+
+                if (depandValue == 'true') {
+                    depandValue = 1;
+                } else if (depandValue == 'false') {
+                    depandValue = 0;
+                }
+
                 $(document).on("change", "select.control", function() {
                     if (this_this.depand == this.name) {
                         if (this_this.value == this.value) {
@@ -454,17 +457,21 @@
                         }
                     }
                 })
+
+                if (dependentElement && dependentElement.value == depandValue) {
+                    this_this.isVisible = true;
+                } else {
+                    this_this.isVisible = false;
+                }
+
+                if (this_this.result) {
+                    if (dependentElement.value == this_this.value) {
+                        this_this.isVisible = true;
+                    } else {
+                        this_this.isVisible = false;
+                    }
+                }
             });
-
-            if (dependentElement && dependentElement.value == depandValue) {
-                this_this.isVisible = true;
-            } else {
-                this_this.isVisible = false;
-            }
-
-            if (this_this.result) {
-                this_this.isVisible = true;
-            }
         }
     });
 </script>
