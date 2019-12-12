@@ -90,6 +90,7 @@
             "Webkul\\Tax\\": "packages/Webkul/Tax/src",
             "Webkul\\API\\": "packages/Webkul/API",
             "Webkul\\Discount\\": "packages/Webkul/Discount/src",
+            "Webkul\\Marketplace\\": "packages/Webkul/Marketplace",
             "Payment\\": "packages/Payment/src"
         }
     },

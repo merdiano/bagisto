@@ -1,0 +1,50 @@
+.social-icon {
+    width: 36px;
+    height: 36px;
+}
+
+.mp-facebook-icon {
+    background-image: url("../images/mp-facebook.svg");
+}
+
+.mp-twitter-icon {
+    background-image: url("../images/mp-twiter.svg");
+}
+
+.mp-instagram-icon {
+    background-image: url("../images/mp-instagram.svg");
+}
+
+.mp-pinterest-icon {
+    background-image: url("../images/mp-pinterest.svg");
+}
+
+.mp-skype-icon {
+    background-image: url("../images/mp-skype.svg");
+}
+
+.mp-linked-in-icon {
+    background-image: url("../images/mp-linked-in.svg");
+}
+
+.mp-youtube-icon {
+    background-image: url("../images/mp-youtube.svg");
+}
+
+.marketplace-icon {
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    background-size: cover;
+    background-image: url("../images/Icon-Marketplace.svg");
+}
+
+.active {
+    .marketplace-icon {
+        background-image: url("../images/Icon-Marketplace-Active.svg");
+    }
+
+    &.marketplace-icon {
+        background-image: url("../images/Icon-Marketplace-Active.svg");
+    }
+}
