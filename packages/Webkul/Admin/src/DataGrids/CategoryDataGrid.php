@@ -21,7 +21,7 @@ class CategoryDataGrid extends DataGrid
     {
         $queryBuilder = DB::table('categories as cat')
                 ->select('cat.id as category_id', 'ct.name', 'cat.position', 'cat.status', 'ct.locale',
-                DB::raw('COUNT(DISTINCT pc.product_id) as count'))
+                DB::raw('COUNT(DISTINCT '.DB::getTablePrefix().'pc.product_id) as count'))
                 ->leftJoin('category_translations as ct', function($leftJoin) {
                     $leftJoin->on('cat.id', '=', 'ct.category_id')
                         ->where('ct.locale', app()->getLocale());
@@ -91,14 +91,14 @@ class CategoryDataGrid extends DataGrid
 
     public function prepareActions() {
         $this->addAction([
-            'type' => 'Edit',
+            'title' => 'Edit Category',
             'method' => 'GET', // use GET request only for redirect purposes
             'route' => 'admin.catalog.categories.edit',
             'icon' => 'icon pencil-lg-icon'
         ]);
 
         $this->addAction([
-            'type' => 'Delete',
+            'title' => 'Delete Category',
             'method' => 'POST', // use GET request only for redirect purposes
             'route' => 'admin.catalog.categories.delete',
             'confirm_text' => trans('ui::app.datagrid.massaction.delete', ['resource' => 'product']),

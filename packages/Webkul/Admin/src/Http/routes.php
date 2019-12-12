@@ -82,6 +82,36 @@ Route::group(['middleware' => ['web']], function () {
                 'view' => 'admin::customers.reviews.index'
             ])->name('admin.customer.review.index');
 
+            //Customer's addresses routes
+            Route::get('customers/{id}/addresses', 'Webkul\Admin\Http\Controllers\Customer\AddressController@index')->defaults('_config', [
+                'view' => 'admin::customers.addresses.index'
+            ])->name('admin.customer.addresses.index');
+
+            Route::get('customers/{id}/addresses/create', 'Webkul\Admin\Http\Controllers\Customer\AddressController@create')->defaults('_config',[
+                'view' => 'admin::customers.addresses.create'
+            ])->name('admin.customer.addresses.create');
+
+            Route::post('customers/{id}/addresses/create', 'Webkul\Admin\Http\Controllers\Customer\AddressController@store')->defaults('_config',[
+                'redirect' => 'admin.customer.addresses.index'
+            ])->name('admin.customer.addresses.store');
+
+            Route::get('customers/addresses/edit/{id}', 'Webkul\Admin\Http\Controllers\Customer\AddressController@edit')->defaults('_config',[
+                'view' => 'admin::customers.addresses.edit'
+            ])->name('admin.customer.addresses.edit');
+
+            Route::put('customers/addresses/edit/{id}', 'Webkul\Admin\Http\Controllers\Customer\AddressController@update')->defaults('_config', [
+                'redirect' => 'admin.customer.addresses.index'
+            ])->name('admin.customer.addresses.update');
+
+            Route::post('customers/addresses/delete/{id}', 'Webkul\Admin\Http\Controllers\Customer\AddressController@destroy')->defaults('_config', [
+                'redirect' => 'admin.customer.addresses.index'
+            ])->name('admin.customer.addresses.delete');
+
+            //mass destroy
+            Route::post('customers/{id}/addresses', 'Webkul\Admin\Http\Controllers\Customer\AddressController@massDestroy')->defaults('_config', [
+                'redirect' => 'admin.customer.addresses.index'
+            ])->name('admin.customer.addresses.massdelete');
+
             // Configuration routes
             Route::get('configuration/{slug?}/{slug2?}', 'Webkul\Admin\Http\Controllers\ConfigurationController@index')->defaults('_config', [
                 'view' => 'admin::configuration.index'
@@ -196,6 +226,28 @@ Route::group(['middleware' => ['web']], function () {
                 Route::get('/shipments/view/{id}', 'Webkul\Admin\Http\Controllers\Sales\ShipmentController@view')->defaults('_config', [
                     'view' => 'admin::sales.shipments.view'
                 ])->name('admin.sales.shipments.view');
+
+
+                // Sales Redunds Routes
+                Route::get('/refunds', 'Webkul\Admin\Http\Controllers\Sales\RefundController@index')->defaults('_config', [
+                    'view' => 'admin::sales.refunds.index'
+                ])->name('admin.sales.refunds.index');
+
+                Route::get('/refunds/create/{order_id}', 'Webkul\Admin\Http\Controllers\Sales\RefundController@create')->defaults('_config', [
+                    'view' => 'admin::sales.refunds.create'
+                ])->name('admin.sales.refunds.create');
+
+                Route::post('/refunds/create/{order_id}', 'Webkul\Admin\Http\Controllers\Sales\RefundController@store')->defaults('_config', [
+                    'redirect' => 'admin.sales.orders.view'
+                ])->name('admin.sales.refunds.store');
+
+                Route::post('/refunds/update-qty/{order_id}', 'Webkul\Admin\Http\Controllers\Sales\RefundController@updateQty')->defaults('_config', [
+                    'redirect' => 'admin.sales.orders.view'
+                ])->name('admin.sales.refunds.update_qty');
+
+                Route::get('/refunds/view/{id}', 'Webkul\Admin\Http\Controllers\Sales\RefundController@view')->defaults('_config', [
+                    'view' => 'admin::sales.refunds.view'
+                ])->name('admin.sales.refunds.view');
             });
 
             // Catalog Routes
@@ -223,6 +275,10 @@ Route::group(['middleware' => ['web']], function () {
                     'redirect' => 'admin.catalog.products.index'
                 ])->name('admin.catalog.products.update');
 
+                Route::post('/products/upload-file/{id}', 'Webkul\Product\Http\Controllers\ProductController@uploadLink')->name('admin.catalog.products.upload_link');
+
+                Route::post('/products/upload-sample/{id}', 'Webkul\Product\Http\Controllers\ProductController@uploadSample')->name('admin.catalog.products.upload_sample');
+
                 //product delete
                 Route::post('/products/delete/{id}', 'Webkul\Product\Http\Controllers\ProductController@destroy')->name('admin.catalog.products.delete');
 
@@ -243,6 +299,8 @@ Route::group(['middleware' => ['web']], function () {
                 Route::get('products/search', 'Webkul\Product\Http\Controllers\ProductController@productLinkSearch')->defaults('_config', [
                     'view' => 'admin::catalog.products.edit'
                 ])->name('admin.catalog.products.productlinksearch');
+
+                Route::get('products/search-simple-products', 'Webkul\Product\Http\Controllers\ProductController@searchSimpleProducts')->name('admin.catalog.products.search_simple_product');
 
                 Route::get('/products/{id}/{attribute_id}', 'Webkul\Product\Http\Controllers\ProductController@download')->defaults('_config', [
                     'view' => 'admin.catalog.products.edit'
@@ -445,6 +503,8 @@ Route::group(['middleware' => ['web']], function () {
                 'view' => 'admin::settings.exchange_rates.edit'
             ])->name('admin.exchange_rates.edit');
 
+            Route::get('/exchange_rates/update-rates/{service}', 'Webkul\Core\Http\Controllers\ExchangeRateController@updateRates')->name('admin.exchange_rates.update-rates');
+
             Route::put('/exchange_rates/edit/{id}', 'Webkul\Core\Http\Controllers\ExchangeRateController@update')->defaults('_config', [
                 'redirect' => 'admin.exchange_rates.index'
             ])->name('admin.exchange_rates.update');
@@ -505,21 +565,6 @@ Route::group(['middleware' => ['web']], function () {
             ])->name('admin.account.edit');
 
             Route::put('/account', 'Webkul\User\Http\Controllers\AccountController@update')->name('admin.account.update');
-
-            //API Authorizations
-            // Route::get('/api/clients', 'Webkul\Admin\Http\Controllers\AuthorizationController@show')->defaults('_config', [
-            //     'view' => 'admin::apiauth.client'
-            //  ])->name('admin.index.oauth.client');
-
-            //  //view an OAuth API Client
-            //  Route::get('/api/clients/view/{id}', 'Webkul\Admin\Http\Controllers\AuthorizationController@view')->defaults('_config', [
-            //     'view' => 'admin::apiauth.view'
-            //  ])->name('admin.view.oauth.client');
-
-            // //edit an OAuth API Client
-            // Route::get('/api/clients/delete/{id}', 'Webkul\Admin\Http\Controllers\AuthorizationController@delete')->defaults('_config', [
-            //     'view' => 'admin::apiauth.edit'
-            // ])->name('admin.delete.oauth.client');
 
 
             // Admin Store Front Settings Route
@@ -625,33 +670,37 @@ Route::group(['middleware' => ['web']], function () {
             Route::post('admin/export', 'Webkul\Admin\Http\Controllers\ExportController@export')->name('admin.datagrid.export');
 
             Route::prefix('promotion')->group(function () {
-                // Route::get('/catalog-rule', 'Webkul\Discount\Http\Controllers\CatalogRuleController@index')->defaults('_config', [
-                //     'view' => 'admin::promotions.catalog-rule.index'
-                // ])->name('admin.catalog-rule.index');
+                Route::get('/catalog-rules', 'Webkul\Discount\Http\Controllers\CatalogRuleController@index')->defaults('_config', [
+                    'view' => 'admin::promotions.catalog-rule.index'
+                ])->name('admin.catalog-rule.index');
 
-                // Route::get('/catalog-rule/create', 'Webkul\Discount\Http\Controllers\CatalogRuleController@create')->defaults('_config', [
-                //     'view' => 'admin::promotions.catalog-rule.create'
-                // ])->name('admin.catalog-rule.create');
+                Route::get('/catalog-rules/create', 'Webkul\Discount\Http\Controllers\CatalogRuleController@create')->defaults('_config', [
+                    'view' => 'admin::promotions.catalog-rule.create'
+                ])->name('admin.catalog-rule.create');
 
-                // Route::post('/catalog-rule/create', 'Webkul\Discount\Http\Controllers\CatalogRuleController@store')->defaults('_config', [
-                //     'redirect' => 'admin.catalog-rule.index'
-                // ])->name('admin.catalog-rule.store');
+                Route::post('/catalog-rules/create', 'Webkul\Discount\Http\Controllers\CatalogRuleController@store')->defaults('_config', [
+                    'redirect' => 'admin.catalog-rule.index'
+                ])->name('admin.catalog-rule.store');
 
-                // Route::get('/catalog-rule/edit/{id}', 'Webkul\Discount\Http\Controllers\CatalogRuleController@edit')->defaults('_config', [
-                //     'view' => 'admin::promotions.catalog-rule.edit'
-                // ])->name('admin.catalog-rule.edit');
+                Route::get('/catalog-rules/edit/{id}', 'Webkul\Discount\Http\Controllers\CatalogRuleController@edit')->defaults('_config', [
+                    'view' => 'admin::promotions.catalog-rule.edit'
+                ])->name('admin.catalog-rule.edit');
 
-                // Route::post('/catalog-rule/edit/{id}', 'Webkul\Discount\Http\Controllers\CatalogRuleController@update')->defaults('_config', [
-                //     'redirect' => 'admin.catalog-rule.index'
-                // ])->name('admin.catalog-rule.update');
+                Route::post('/catalog-rules/edit/{id}', 'Webkul\Discount\Http\Controllers\CatalogRuleController@update')->defaults('_config', [
+                    'redirect' => 'admin.catalog-rule.index'
+                ])->name('admin.catalog-rule.update');
 
-                // Route::get('/catalog-rule/apply', 'Webkul\Discount\Http\Controllers\CatalogRuleController@applyRules')->defaults('_config', [
-                //     'view' => 'admin::promotions.catalog-rule.index'
-                // ])->name('admin.catalog-rule.apply');
+                Route::get('/catalog-rules/apply', 'Webkul\Discount\Http\Controllers\CatalogRuleController@applyRules')->defaults('_config', [
+                    'view' => 'admin::promotions.catalog-rule.index'
+                ])->name('admin.catalog-rule.apply');
 
-                // Route::post('/catalog-rule/delete/{id}', 'Webkul\Discount\Http\Controllers\CatalogRuleController@destroy')->name('admin.catalog-rule.delete');
+                Route::post('/catalog-rules/delete/{id}', 'Webkul\Discount\Http\Controllers\CatalogRuleController@destroy')->name('admin.catalog-rule.delete');
 
-                // Route::post('fetch/options', 'Webkul\Discount\Http\Controllers\CatalogRuleController@fetchAttributeOptions')->name('admin.catalog-rule.options');
+                Route::get('/catalog-rules/declutter', 'Webkul\Discount\Http\Controllers\CatalogRuleController@deClutter')->defaults('_config', [
+                    'redirect' => 'admin.catalog-rule.index'
+                ])->name('admin.catalog-rule.declut');
+
+                Route::post('fetch/options', 'Webkul\Discount\Http\Controllers\CatalogRuleController@fetchAttributeOptions')->name('admin.catalog-rule.options');
 
                 Route::get('cart-rules', 'Webkul\Discount\Http\Controllers\CartRuleController@index')->defaults('_config', [
                     'view' => 'admin::promotions.cart-rule.index'
@@ -674,6 +723,48 @@ Route::group(['middleware' => ['web']], function () {
                 ])->name('admin.cart-rule.update');
 
                 Route::post('cart-rules/delete/{id}', 'Webkul\Discount\Http\Controllers\CartRuleController@destroy')->name('admin.cart-rule.delete');
+            });
+
+            Route::prefix('cms')->group(function () {
+                Route::get('/', 'Webkul\CMS\Http\Controllers\Admin\PageController@index')->defaults('_config', [
+                    'view' => 'admin::cms.index'
+                ])->name('admin.cms.index');
+
+                Route::get('preview/{url_key}', 'Webkul\CMS\Http\Controllers\Admin\PageController@preview')->name('admin.cms.preview');
+
+                Route::get('create', 'Webkul\CMS\Http\Controllers\Admin\PageController@create')->defaults('_config', [
+                    'view' => 'admin::cms.create'
+                ])->name('admin.cms.create');
+
+                Route::post('create', 'Webkul\CMS\Http\Controllers\Admin\PageController@store')->defaults('_config', [
+                    'redirect' => 'admin.cms.index'
+                ])->name('admin.cms.store');
+
+                Route::get('update/{id}', 'Webkul\CMS\Http\Controllers\Admin\PageController@edit')->defaults('_config', [
+                    'view' => 'admin::cms.edit'
+                ])->name('admin.cms.edit');
+
+                Route::post('update/{id}', 'Webkul\CMS\Http\Controllers\Admin\PageController@update')->defaults('_config', [
+                    'redirect' => 'admin.cms.index'
+                ])->name('admin.cms.update');
+
+                Route::post('/delete/{id}', 'Webkul\CMS\Http\Controllers\Admin\PageController@delete')->defaults('_config', [
+                    'redirect' => 'admin.cms.index'
+                ])->name('admin.cms.delete');
+
+                Route::post('/massdelete', 'Webkul\CMS\Http\Controllers\Admin\PageController@massDelete')->defaults('_config', [
+                    'redirect' => 'admin.cms.index'
+                ])->name('admin.cms.mass-delete');
+
+                // Route::post('/delete/{id}', 'Webkul\CMS\Http\Controllers\Admin\PageController@delete')->defaults('_config', [
+                //     'redirect' => 'admin.cms.index'
+                // ])->name('admin.cms.delete');
+            });
+
+            // Development settings
+            Route::prefix('development')->group(function () {
+                Route::get('/', 'Webkul\Admin\Http\Controllers\Development\DashboardController@index')
+                    ->name('admin.development.index');
             });
         });
     });

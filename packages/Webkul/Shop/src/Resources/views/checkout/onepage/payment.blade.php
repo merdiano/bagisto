@@ -19,16 +19,14 @@
 
                                 <span class="checkmark"></span>
 
-                                {{-- <label class="radio-view" for="{{ $payment['method'] }}"></label> --}}
+                                <span class="payment-method method-label">
+                                    <b>{{ $payment['method_title'] }}</b>
+                                </span>
                             </label>
-
-                            <span class="payment-method method-label">
-                                <b>{{ $payment['method_title'] }}</b>
-                            </span>
                         </div>
 
                         <div class="line-two mt-5">
-                            <span class="method-summary">{{ $payment['description'] }}</span>
+                            <span class="method-summary">{{ __($payment['description']) }}</span>
                         </div>
                     </div>
 

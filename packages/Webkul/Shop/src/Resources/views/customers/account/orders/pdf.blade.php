@@ -92,7 +92,7 @@
 
                 <div class="row">
                     <span class="label">{{ __('shop::app.customer.account.order.view.order-id') }} -</span>
-                    <span class="value">#{{ $invoice->order_id }}</span>
+                    <span class="value">#{{ $invoice->order->increment_id }}</span>
                 </div>
 
                 <div class="row">
@@ -105,7 +105,9 @@
                         <thead>
                             <tr>
                                 <th style="width: 50%">{{ __('shop::app.customer.account.order.view.bill-to') }}</th>
-                                <th>{{ __('shop::app.customer.account.order.view.ship-to') }}</th>
+                                @if ($invoice->order->shipping_address)
+                                    <th>{{ __('shop::app.customer.account.order.view.ship-to') }}</th>
+                                @endif
                             </tr>
                         </thead>
 
@@ -116,17 +118,23 @@
                                     <p>{{ $invoice->order->billing_address->address1 }}</p>
                                     <p>{{ $invoice->order->billing_address->city }}</p>
                                     <p>{{ $invoice->order->billing_address->state }}</p>
-                                    <p>{{ core()->country_name($invoice->order->billing_address->country) }} {{ $invoice->order->billing_address->postcode }}</p>
+                                    <p>
+                                        {{ core()->country_name($invoice->order->billing_address->country) }}
+                                        {{ $invoice->order->billing_address->postcode }}
+                                    </p>
                                     {{ __('shop::app.customer.account.order.view.contact') }} : {{ $invoice->order->billing_address->phone }}
                                 </td>
-                                <td>
-                                    <p>{{ $invoice->order->shipping_address->name }}</p>
-                                    <p>{{ $invoice->order->shipping_address->address1 }}</p>
-                                    <p>{{ $invoice->order->shipping_address->city }}</p>
-                                    <p>{{ $invoice->order->shipping_address->state }}</p>
-                                    <p>{{ core()->country_name($invoice->order->shipping_address->country) }} {{ $invoice->order->shipping_address->postcode }}</p>
-                                    {{ __('shop::app.customer.account.order.view.contact') }} : {{ $invoice->order->shipping_address->phone }}
-                                </td>
+                                
+                                @if ($invoice->order->shipping_address)
+                                    <td>
+                                        <p>{{ $invoice->order->shipping_address->name }}</p>
+                                        <p>{{ $invoice->order->shipping_address->address1 }}</p>
+                                        <p>{{ $invoice->order->shipping_address->city }}</p>
+                                        <p>{{ $invoice->order->shipping_address->state }}</p>
+                                        <p>{{ core()->country_name($invoice->order->shipping_address->country) }} {{ $invoice->order->shipping_address->postcode }}</p>
+                                        {{ __('shop::app.customer.account.order.view.contact') }} : {{ $invoice->order->shipping_address->phone }}
+                                    </td>
+                                @endif
                             </tr>
                         </tbody>
                     </table>
@@ -137,7 +145,10 @@
                         <thead>
                             <tr>
                                 <th style="width: 50%">{{ __('shop::app.customer.account.order.view.payment-method') }}</th>
-                                <th>{{ __('shop::app.customer.account.order.view.shipping-method') }}</th>
+
+                                @if ($invoice->order->shipping_address)
+                                    <th>{{ __('shop::app.customer.account.order.view.shipping-method') }}</th>
+                                @endif
                             </tr>
                         </thead>
 
@@ -146,9 +157,12 @@
                                 <td>
                                     {{ core()->getConfigData('sales.paymentmethods.' . $invoice->order->payment->method . '.title') }}
                                 </td>
-                                <td>
-                                    {{ $invoice->order->shipping_title }}
-                                </td>
+
+                                @if ($invoice->order->shipping_address)
+                                    <td>
+                                        {{ $invoice->order->shipping_title }}
+                                    </td>
+                                @endif
                             </tr>
                         </tbody>
                     </table>
@@ -173,17 +187,29 @@
                             @foreach ($invoice->items as $item)
                                 <tr>
                                     <td>{{ $item->child ? $item->child->sku : $item->sku }}</td>
+
                                     <td>
                                         {{ $item->name }}
 
-                                        @if ($html = $item->getOptionDetailHtml())
-                                            <p>{{ $html }}</p>
+                                        @if (isset($item->additional['attributes']))
+                                            <div class="item-options">
+                                                
+                                                @foreach ($item->additional['attributes'] as $attribute)
+                                                    <b>{{ $attribute['attribute_name'] }} : </b>{{ $attribute['option_label'] }}</br>
+                                                @endforeach
+
+                                            </div>
                                         @endif
                                     </td>
+
                                     <td>{{ core()->formatPrice($item->price, $invoice->order->order_currency_code) }}</td>
+
                                     <td>{{ $item->qty }}</td>
+
                                     <td>{{ core()->formatPrice($item->total, $invoice->order->order_currency_code) }}</td>
+
                                     <td>{{ core()->formatPrice($item->tax_amount, $invoice->order->order_currency_code) }}</td>
+
                                     <td>{{ core()->formatPrice(($item->total + $item->tax_amount), $invoice->order->order_currency_code) }}</td>
                                 </tr>
                             @endforeach
@@ -205,6 +231,14 @@
                         <td>-</td>
                         <td>{{ core()->formatPrice($invoice->shipping_amount, $invoice->order->order_currency_code) }}</td>
                     </tr>
+
+                    @if ($invoice->base_discount_amount > 0)
+                        <tr>
+                            <td>{{ __('shop::app.customer.account.order.view.discount') }}</td>
+                            <td>-</td>
+                            <td>{{ core()->formatPrice($invoice->discount_amount, $invoice->order_currency_code) }}</td>
+                        </tr>
+                    @endif
 
                     <tr>
                         <td>{{ __('shop::app.customer.account.order.view.tax') }}</td>

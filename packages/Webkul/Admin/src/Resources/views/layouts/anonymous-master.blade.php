@@ -78,9 +78,9 @@
 
                     <div class="brand-logo">
                         @if (core()->getConfigData('general.design.admin_logo.logo_image'))
-                            <img src="{{ \Illuminate\Support\Facades\Storage::url(core()->getConfigData('general.design.admin_logo.logo_image')) }}" alt="Bagisto" style="height: 40px; width: 110px;"/>
+                            <img src="{{ \Illuminate\Support\Facades\Storage::url(core()->getConfigData('general.design.admin_logo.logo_image')) }}" alt="{{ config('app.name') }}" style="height: 40px; width: 110px;"/>
                         @else
-                            <img src="{{ asset('vendor/webkul/ui/assets/images/logo.png') }}" alt="Bagisto"/>
+                            <img src="{{ asset('vendor/webkul/ui/assets/images/logo.png') }}" alt="{{ config('app.name') }}"/>
                         @endif
                     </div>
 
@@ -90,16 +90,17 @@
 
                     {!! view_render_event('bagisto.admin.layout.content.after') !!}
 
-                    <div class="footer">
-                        <p>
-                            @if (core()->getConfigData('general.content.footer.footer_content'))
-                                {{ core()->getConfigData('general.content.footer.footer_content') }}
-                            @else
-                                {{ trans('admin::app.footer.copy-right') }}
-                            @endif
-                        </p>
-                    </div>
-
+                    @if (core()->getConfigData('general.content.footer.footer_toggle'))
+                        <div class="footer">
+                            <p style="text-align: center;">
+                                @if (core()->getConfigData('general.content.footer.footer_content'))
+                                    {{ core()->getConfigData('general.content.footer.footer_content') }}
+                                @else
+                                    {{ trans('admin::app.footer.copy-right') }}
+                                @endif
+                            </p>
+                        </div>
+                    @endif
                 </div>
 
             </div>
@@ -117,8 +118,10 @@
             @endif
 
             window.serverErrors = [];
-            @if (count($errors))
-                window.serverErrors = @json($errors->getMessages());
+            @if (isset($errors))
+                @if (count($errors))
+                    window.serverErrors = @json($errors->getMessages());
+                @endif
             @endif
         </script>
 

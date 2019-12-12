@@ -1,7 +1,11 @@
 @component('shop::emails.layouts.master')
     <div style="text-align: center;">
         <a href="{{ config('app.url') }}">
-            <img src="{{ bagisto_asset('images/logo.svg') }}">
+            @if (core()->getConfigData('general.design.admin_logo.logo_image'))
+                <img src="{{ \Illuminate\Support\Facades\Storage::url(core()->getConfigData('general.design.admin_logo.logo_image')) }}" alt="{{ config('app.name') }}" style="height: 40px; width: 110px;"/>
+            @else
+                <img src="{{ asset('vendor/webkul/ui/assets/images/logo.png') }}" alt="{{ config('app.name') }}"/>
+            @endif
         </a>
     </div>
 
@@ -11,7 +15,7 @@
     <div style="padding: 30px;">
         <div style="font-size: 20px;color: #242424;line-height: 30px;margin-bottom: 34px;">
             <span style="font-weight: bold;">
-                {{ __('shop::app.mail.shipment.inventory-heading', ['order_id' => $order->id, 'shipment_id' => $shipment->id]) }}
+                {{ __('shop::app.mail.shipment.inventory-heading', ['order_id' => $order->increment_id, 'shipment_id' => $shipment->id]) }}
             </span> <br>
 
             <p style="font-size: 16px;color: #5E5E5E;line-height: 24px;">
@@ -20,7 +24,7 @@
 
             <p style="font-size: 16px;color: #5E5E5E;line-height: 24px;">
                 {!! __('shop::app.mail.shipment.greeting', [
-                    'order_id' => '<a href="' . route('customer.orders.view', $order->id) . '" style="color: #0041FF; font-weight: bold;">#' . $order->id . '</a>',
+                    'order_id' => '<a href="' . route('customer.orders.view', $order->id) . '" style="color: #0041FF; font-weight: bold;">#' . $order->increment_id . '</a>',
                     'created_at' => $order->created_at
                     ])
                 !!}
@@ -121,19 +125,26 @@
                     <tbody>
                         @foreach ($shipment->items as $item)
                             <tr>
-                                <td data-value="{{ __('shop::app.customer.account.order.view.SKU') }}" style="text-align: left;padding: 8px">{{ $item->child ? $item->child->sku : $item->sku }}</td>
-                                <td data-value="{{ __('shop::app.customer.account.order.view.product-name') }}" style="text-align: left;padding: 8px">{{ $item->name }}</td>
+                                <td data-value="{{ __('shop::app.customer.account.order.view.SKU') }}" style="text-align: left;padding: 8px">{{ $item->getTypeInstance()->getOrderedItem($item)->sku }}</td>
+
+                                <td data-value="{{ __('shop::app.customer.account.order.view.product-name') }}" style="text-align: left;padding: 8px">
+                                    {{ $item->name }}
+                                    
+                                    @if (isset($item->additional['attributes']))
+                                        <div class="item-options">
+                                            
+                                            @foreach ($item->additional['attributes'] as $attribute)
+                                                <b>{{ $attribute['attribute_name'] }} : </b>{{ $attribute['option_label'] }}</br>
+                                            @endforeach
+
+                                        </div>
+                                    @endif
+                                </td>
+
                                 <td data-value="{{ __('shop::app.customer.account.order.view.price') }}" style="text-align: left;padding: 8px">{{ core()->formatPrice($item->price, $order->order_currency_code) }}</td>
+
                                 <td data-value="{{ __('shop::app.customer.account.order.view.qty') }}" style="text-align: left;padding: 8px">{{ $item->qty }}</td>
                             </tr>
-
-                            @if ($html = $item->getOptionDetailHtml())
-                                <div style="">
-                                    <label style="margin-top: 10px; font-size: 16px;color: #5E5E5E; display: block;">
-                                        {{ $html }}
-                                    </label>
-                                </div>
-                            @endif
                         @endforeach
                     </tbody>
                 </table>

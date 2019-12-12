@@ -17,7 +17,7 @@ class Customer extends Authenticatable implements CustomerContract, JWTSubject
 
     protected $table = 'customers';
 
-    protected $fillable = ['first_name', 'channel_id', 'last_name', 'gender', 'date_of_birth', 'email', 'phone', 'password', 'customer_group_id', 'subscribed_to_news_letter', 'is_verified', 'token', 'notes', 'status'];
+    protected $fillable = ['first_name', 'last_name', 'gender', 'date_of_birth', 'email', 'phone', 'password', 'customer_group_id', 'subscribed_to_news_letter', 'is_verified', 'token', 'notes', 'status'];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -26,6 +26,19 @@ class Customer extends Authenticatable implements CustomerContract, JWTSubject
      */
     public function getNameAttribute() {
         return ucfirst($this->first_name) . ' ' . ucfirst($this->last_name);
+    }
+
+    /**
+     * Email exists or not
+     */
+    public function emailExists($email) {
+        $results =  $this->where('email', $email);
+
+        if ($results->count() == 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**

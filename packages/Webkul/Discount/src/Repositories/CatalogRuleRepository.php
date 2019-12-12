@@ -8,23 +8,32 @@ use Webkul\Discount\Repositories\CatalogRuleCustomerGroupsRepository as CatalogR
 use Illuminate\Container\Container as App;
 
 /**
- * Catalog Rule Reposotory
+ * CatalogRuleReposotory
  *
  * @author  Prashant Singh <prashant.singh852@webkul.com>
- * @copyright 2018 Webkul Software Pvt Ltd (http://www.webkul.com)
+ * @copyright  2019 Webkul Software Pvt Ltd (http://www.webkul.com)
  */
 class CatalogRuleRepository extends Repository
 {
+    /**
+     * Will hold catalogRuleChannelsRepository instance
+     */
     protected $catalogRuleChannels;
 
+    /**
+     * Will hold catalogRuleCustomerGroupsRepository instance
+     */
     protected $catalogRuleCustomerGroups;
 
     /**
-     *
+     * @param CatalogRuleChannels $catalogRuleChannels
+     * @param CatalogRuleCustomerGroups $catalogRuleCustomerGroups
+     * @param App $app
      */
     public function __construct(CatalogRuleChannels $catalogRuleChannels, CatalogRuleCustomerGroups $catalogRuleCustomerGroups, App $app)
     {
         $this->catalogRuleChannels = $catalogRuleChannels;
+
         $this->catalogRuleCustomerGroups = $catalogRuleCustomerGroups;
 
         parent::__construct($app);
@@ -33,7 +42,7 @@ class CatalogRuleRepository extends Repository
     /**
      * Specify Model class name
      *
-     * @return mixed
+     * @return String
      */
     function model()
     {
@@ -42,6 +51,11 @@ class CatalogRuleRepository extends Repository
 
     /**
      * To sync the customer groups related records
+     *
+     * @param Array $newCustomerGroups
+     * @param CatalogRule $catalogRule
+     *
+     * @return Boolean
      */
     public function CustomerGroupSync($newCustomerGroups, $catalogRule)
     {
@@ -52,10 +66,10 @@ class CatalogRuleRepository extends Repository
 
         foreach ($oldCustomerGroups as $key => $oldCustomerGroup) {
             $found = 0;
+
             foreach($newCustomerGroups as $newCustomerGroup) {
-                if ($oldCustomerGroup['customer_group_id'] == $newCustomerGroup) {
+                if ($oldCustomerGroup['customer_group_id'] == $newCustomerGroup)
                     $found = 1;
-                }
             }
 
             if ($found == 0) {
@@ -69,10 +83,10 @@ class CatalogRuleRepository extends Repository
         if (count($newCustomerGroups) && count($oldCustomerGroups)) {
             foreach ($oldCustomerGroups as $oldCustomerGroup) {
                 $found = 0;
+
                 foreach ($newCustomerGroups as $key => $newCustomerGroup) {
-                    if ($oldCustomerGroup['customer_group_id'] == $newCustomerGroup) {
+                    if ($oldCustomerGroup['customer_group_id'] == $newCustomerGroup)
                         unset($newCustomerGroups[$key]);
-                    }
                 }
             }
         }
@@ -90,6 +104,11 @@ class CatalogRuleRepository extends Repository
 
     /**
      * To sync the channels related records
+     *
+     * @param Array $newChannels
+     * @param CatalogRule $catalogRule
+     *
+     * @return Boolean
      */
     public function ChannelSync($newChannels, $catalogRule)
     {
@@ -101,9 +120,8 @@ class CatalogRuleRepository extends Repository
         foreach ($oldChannels as $key => $oldChannel) {
             $found = 0;
             foreach($newChannels as $newChannel) {
-                if ($oldChannel['channel_id'] == $newChannel) {
+                if ($oldChannel['channel_id'] == $newChannel)
                     $found = 1;
-                }
             }
 
             if ($found == 0) {
@@ -117,10 +135,10 @@ class CatalogRuleRepository extends Repository
         if (count($newChannels) && count($oldChannels)) {
             foreach ($oldChannels as $oldChannel) {
                 $found = 0;
+
                 foreach ($newChannels as $key => $newChannel) {
-                    if ($oldChannel['channel_id'] == $newChannel) {
+                    if ($oldChannel['channel_id'] == $newChannel)
                         unset($newChannels[$key]);
-                    }
                 }
             }
         }

@@ -25,7 +25,7 @@ class ProductDataGrid extends DataGrid
         ->leftJoin('products', 'product_flat.product_id', '=', 'products.id')
         ->leftJoin('attribute_families', 'products.attribute_family_id', '=', 'attribute_families.id')
         ->leftJoin('product_inventories', 'product_flat.product_id', '=', 'product_inventories.product_id')
-        ->select('product_flat.product_id as product_id', 'product_flat.sku as product_sku', 'product_flat.name as product_name', 'products.type as product_type', 'product_flat.status', 'product_flat.price', 'attribute_families.name as attribute_family', DB::raw('SUM(product_inventories.qty) as quantity'))
+        ->select('product_flat.product_id as product_id', 'product_flat.sku as product_sku', 'product_flat.name as product_name', 'products.type as product_type', 'product_flat.status', 'product_flat.price', 'attribute_families.name as attribute_family', DB::raw('SUM('.DB::getTablePrefix().'product_inventories.qty) as quantity'))
         ->where('channel', core()->getCurrentChannelCode())
         ->where('locale', app()->getLocale())
         ->groupBy('product_flat.product_id');
@@ -129,14 +129,17 @@ class ProductDataGrid extends DataGrid
 
     public function prepareActions() {
         $this->addAction([
-            'type' => 'Edit',
+            'title' => 'Edit Product',
+            'condition' => function() {
+                return true;
+            },
             'method' => 'GET', // use GET request only for redirect purposes
             'route' => 'admin.catalog.products.edit',
             'icon' => 'icon pencil-lg-icon'
         ]);
 
         $this->addAction([
-            'type' => 'Delete',
+            'title' => 'Delete Product',
             'method' => 'POST', // use GET request only for redirect purposes
             'route' => 'admin.catalog.products.delete',
             'confirm_text' => trans('ui::app.datagrid.massaction.delete', ['resource' => 'product']),

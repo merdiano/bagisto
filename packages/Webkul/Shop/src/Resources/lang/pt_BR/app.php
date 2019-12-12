@@ -11,11 +11,12 @@ return [
     ],
 
     'common' => [
-        'error' => 'Algo deu errado, por favor, tente novamente mais tarde.'
+        'error' => 'Algo deu errado, por favor, tente novamente mais tarde.',
+        'no-result-found' => 'We could not find any records.'
     ],
 
     'home' => [
-        'page-title' => 'Bagisto - Home',
+        'page-title' => config('app.name') . ' - Home',
         'featured-products' => 'Produtos em Destaque',
         'new-products' => 'Novos Produtos',
         'verify-email' => 'Verifique sua Conta de E-mail',
@@ -195,7 +196,8 @@ return [
                     'default' => 'Padrão',
                     'contact' => 'Contato',
                     'confirm-delete' =>  'Você realmente deseja excluir este endereço?',
-                    'default-delete' => 'O endereço padrão não pode ser alterado'
+                    'default-delete' => 'O endereço padrão não pode ser alterado',
+                    'enter-password' => 'Enter Your Password.',
                 ],
 
                 'create' => [
@@ -222,7 +224,8 @@ return [
                 ],
                 'delete' => [
                     'success' => 'Endereço Excluído com sucesso',
-                    'failure' => 'Endereço não pode ser adicionado'
+                    'failure' => 'Endereço não pode ser adicionado',
+                    'wrong-password' => 'Wrong Password !'
                 ]
             ],
 
@@ -251,6 +254,7 @@ return [
                     'item-invoice' => 'Faturados (:qty_invoiced)',
                     'item-shipped' => 'enviados (:qty_shipped)',
                     'item-canceled' => 'Cancelados (:qty_canceled)',
+                    'item-refunded' => 'Refunded (:qty_refunded)',
                     'price' => 'Preço',
                     'total' => 'Total',
                     'subtotal' => 'Subtotal',
@@ -276,8 +280,46 @@ return [
                     'order-date' => 'Pedido Date',
                     'bill-to' => 'Cobrança de',
                     'ship-to' => 'Enviar para',
-                    'contact' => 'Contato'
+                    'contact' => 'Contato',
+                    'refunds' => 'Refunds',
+                    'individual-refund' => 'Refund #:refund_id',
+                    'adjustment-refund' => 'Adjustment Refund',
+                    'adjustment-fee' => 'Adjustment Fee',
                 ]
+            ],
+
+            'wishlist' => [
+                'page-title' => 'Customer - Wishlist',
+                'title' => 'Lista de Desejos',
+                'deleteall' => 'Excluir Tudo',
+                'moveall' => 'Adicionar todos ao Carrinho',
+                'move-to-cart' => 'Adicionar ao Carrinho',
+                'error' => 'Não é possível adicionar o produto a lista de Desejos devido a problemas desconhecidos, por favor tente mais tarde',
+                'add' => 'Item adicionado com sucesso a Lista de Desejos',
+                'remove' => 'Item removido com sucesso da Lista de Desejos',
+                'moved' => 'Item movido com sucesso para Lista de Desejos',
+                'move-error' => 'Item não pode ser movido para Lista de Desejos, por favor, tente novamente mais tarde',
+                'success' => 'Item adicionado com sucesso a Lista de Desejos',
+                'failure' => 'Item não pode ser adicionado à Lista de Desejos, por favor, tente novamente mais tarde',
+                'already' => 'Item já presente em sua lista de desejos',
+                'removed' => 'Item removido com sucesso da Lista de Desejos',
+                'remove-fail' => 'Item não pode ser removido da lista de desejos, por favor, tente novamente mais tarde',
+                'empty' => 'Você não tem nenhum item em sua Lista de Desejos',
+                'remove-all-success' => 'Todos os itens da sua lista de desejos foram removidos',
+            ],
+
+            'downloadable_products' => [
+                'title' => 'Downloadable Products',
+                'order-id' => 'Order Id',
+                'date' => 'Date',
+                'name' => 'Title',
+                'status' => 'Status',
+                'pending' => 'Pending',
+                'available' => 'Available',
+                'expired' => 'Expired',
+                'remaining-downloads' => 'Remaining Downloads',
+                'unlimited' => 'Unlimited',
+                'download-error' => 'Download link has been expired.'
             ],
 
             'review' => [
@@ -328,26 +370,13 @@ return [
         'out-of-stock' => 'Fora de Estoque',
         'view-all' => 'Ver Tudo',
         'select-above-options' => 'Por favor, selecione as opções acima primeiro.',
-        'less-quantity' => 'Quantity can not be less than one.'
-    ],
-
-    'wishlist' => [
-        'title' => 'Lista de Desejos',
-        'deleteall' => 'Excluir Tudo',
-        'moveall' => 'Adicionar todos ao Carrinho',
-        'move-to-cart' => 'Adicionar ao Carrinho',
-        'error' => 'Não é possível adicionar o produto a lista de Desejos devido a problemas desconhecidos, por favor tente mais tarde',
-        'add' => 'Item adicionado com sucesso a Lista de Desejos',
-        'remove' => 'Item removido com sucesso da Lista de Desejos',
-        'moved' => 'Item movido com sucesso para Lista de Desejos',
-        'move-error' => 'Item não pode ser movido para Lista de Desejos, por favor, tente novamente mais tarde',
-        'success' => 'Item adicionado com sucesso a Lista de Desejos',
-        'failure' => 'Item não pode ser adicionado à Lista de Desejos, por favor, tente novamente mais tarde',
-        'already' => 'Item já presente em sua lista de desejos',
-        'removed' => 'Item removido com sucesso da Lista de Desejos',
-        'remove-fail' => 'Item não pode ser removido da lista de desejos, por favor, tente novamente mais tarde',
-        'empty' => 'Você não tem nenhum item em sua Lista de Desejos',
-        'remove-all-success' => 'Todos os itens da sua lista de desejos foram removidos',
+        'less-quantity' => 'Quantity can not be less than one.',
+        'starting-at' => 'Starting at',
+        'customize-options' => 'Customize Options',
+        'choose-selection' => 'Choose a selection',
+        'your-customization' => 'Your Customization',
+        'total-amount' => 'Total Amount',
+        'none' => 'None'
     ],
 
     // 'reviews' => [
@@ -364,7 +393,10 @@ return [
             'integrity' => [
                 'missing_fields' =>'Violação de integridade do sistema de carrinho, alguns campos obrigatórios ausentes',
                 'missing_options' =>'Violação de Integridade do Sistema de Carrinho, Faltam Opções para o Produto Configurável',
+                'missing_links' => 'Downloadable links are missing for this product.',
+                'qty_missing' => 'Atleast one product should have more than 1 quantity.'
             ],
+
             'create-error' => 'Encontrou algum problema ao fazer a instância do carrinho',
             'title' => 'Carrinho de Compras',
             'empty' => 'Seu carrinho de compras está vazio',
@@ -384,12 +416,14 @@ return [
                 'inventory_warning' => 'A quantidade solicitada não está disponível, por favor, tente novamente mais tarde',
                 'error' => 'Não é possível atualizar o item(s) no momento, por favor, tente novamente mais tarde'
             ],
+
             'item' => [
                 'error_remove' => 'Nenhum item para remover do carrinho',
                 'success' => 'Item foi adicionado com sucesso ao carrinho',
                 'success-remove' => 'Item foi removido com sucesso do carrinho',
                 'error-add' => 'Item não pode ser adicionado ao carrinho, por favor, tente novamente mais tarde',
             ],
+
             'quantity-error' => 'Quantidade solicitada não está disponível',
             'cart-subtotal' => 'Subtotal do carrinho',
             'cart-remove-action' => 'Você realmente quer fazer isso ?',
@@ -474,11 +508,21 @@ return [
             'help' => 'Se você precisar de algum tipo de ajuda, por favor entre em contato conosco :support_email',
             'thanks' => 'Muito Obrigado!'
         ],
+
         'invoice' => [
             'heading' => 'Sua Fatura #:invoice_id do Pedido #:order_id',
             'subject' => 'Fatura do seu pedido #:order_id',
             'summary' => 'Resumo da Fatura',
         ],
+
+        'refund' => [
+            'heading' => 'Your Refund #:refund_id for Order #:order_id',
+            'subject' => 'Refund for your order #:order_id',
+            'summary' => 'Summary of Refund',
+            'adjustment-refund' => 'Adjustment Refund',
+            'adjustment-fee' => 'Adjustment Fee'
+        ],
+
         'shipment' => [
             'heading' => 'Sua Entrega #:shipment_id do Pedido #:order_id',
             'subject' => 'Entrega do seu pedido #:order_id',
@@ -486,6 +530,7 @@ return [
             'carrier' => 'Transportadora',
             'tracking-number' => 'Código de Rastreio'
         ],
+
         'forget-password' => [
             'dear' => 'Caro :name',
             'info' => 'Você está recebendo este e-mail porque recebemos uma solicitação de redefinição de senha para sua conta',

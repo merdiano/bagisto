@@ -3,6 +3,12 @@
 namespace Webkul\Product\Helpers;
 use DB;
 
+/**
+ * Product Review Helper
+ *
+ * @author Jitendra Singh <jitendra@webkul.com>
+ * @copyright 2018 Webkul Software Pvt Ltd (http://www.webkul.com)
+ */
 class Review extends AbstractProduct
 {
     /**
@@ -14,7 +20,7 @@ class Review extends AbstractProduct
     public function getReviews($product)
     {
         static $reviews = [];
-        
+
         if(array_key_exists($product->id, $reviews))
             return $reviews[$product->id];
 
