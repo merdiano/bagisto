@@ -19,7 +19,7 @@
 
                 @if (count($reviews) > 1)
                     <div class="account-action">
-                        <a href="{{ route('customer.review.deleteall') }}">{{ __('shop::app.wishlist.deleteall') }}</a>
+                        <a href="{{ route('customer.review.deleteall') }}">{{ __('shop::app.customer.account.wishlist.deleteall') }}</a>
                     </div>
                 @endif
 
@@ -65,6 +65,10 @@
                         </div>
                         <div class="horizontal-rule mb-10 mt-10"></div>
                     @endforeach
+
+                    <div class="bottom-toolbar">
+                        {{ $reviews->links()  }}
+                    </div>
                 @else
                     <div class="empty mt-15">
                         {{ __('customer::app.reviews.empty') }}

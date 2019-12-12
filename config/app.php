@@ -202,7 +202,7 @@ return [
          * Package Service Providers...
          */
 
-        Dimsav\Translatable\TranslatableServiceProvider::class,
+        Astrotomic\Translatable\TranslatableServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -224,6 +224,7 @@ return [
         Konekt\Concord\ConcordServiceProvider::class,
         Flynsarmy\DbBladeCompiler\DbBladeCompilerServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
         //Webkul packages
         Webkul\Theme\Providers\ThemeServiceProvider::class,
@@ -249,6 +250,8 @@ return [
 
         //Local payment methods
         Payment\Providers\LocalPaymentServiceProvider::class,
+        Webkul\Discount\Providers\DiscountServiceProvider::class,
+        Webkul\CMS\Providers\CMSServiceProvider::class
     ],
 
     /*
@@ -306,6 +309,6 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Concord' => Konekt\Concord\Facades\Concord::class,
-        'Helper'  => Konekt\Concord\Facades\Helper::class,
+        'Helper'  => Konekt\Concord\Facades\Helper::class
     ],
 ];

@@ -146,74 +146,9 @@
                 </div>
 
                 <table class="table">
-                    <thead v-if="massActionsToggle">
-                        @if (isset($results['massactions']))
-                            <tr class="mass-action" v-if="massActionsToggle" style="height: 65px;">
-                                <th colspan="100%">
-                                    <div class="mass-action-wrapper" style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start;">
+                    @include('ui::datagrid.partials.mass-action-header')
 
-                                        <span class="massaction-remove" v-on:click="removeMassActions" style="margin-right: 10px; margin-top: 3px;">
-                                            <span class="icon checkbox-dash-icon"></span>
-                                        </span>
-
-                                        <form method="POST" id="mass-action-form" style="display: inline-flex;" action="" onsubmit="return confirm('{{ __('ui::app.datagrid.click_on_action') }}')">
-                                            @csrf()
-
-                                            <input type="hidden" id="indexes" name="indexes" v-model="dataIds">
-
-                                            <div class="control-group">
-                                                <select class="control" v-model="massActionType" @change="changeMassActionTarget" name="massaction-type" required>
-                                                    <option v-for="(massAction, index) in massActions" :key="index" :value="massAction.type">@{{ massAction.label }}</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="control-group" style="margin-left: 10px;" v-if="massActionType == 'update'">
-                                                <select class="control" v-model="massActionUpdateValue" name="update-options" required>
-                                                    <option v-for="(massActionValue, id) in massActionValues" :value="massActionValue">@{{ id }}</option>
-                                                </select>
-                                            </div>
-
-                                            <input type="submit" class="btn btn-sm btn-primary" style="margin-left: 10px;">
-                                        </form>
-                                    </div>
-                                </th>
-                            </tr>
-                        @endif
-                    </thead>
-
-                    <thead v-if="massActionsToggle == false">
-                        <tr style="height: 65px;">
-                            @if (count($results['records']) && $results['enableMassActions'])
-                                <th class="grid_head" id="mastercheckbox" style="width: 50px;">
-                                    <span class="checkbox">
-                                        <input type="checkbox" v-model="allSelected" v-on:change="selectAll">
-
-                                        <label class="checkbox-view" for="checkbox"></label>
-                                    </span>
-                                </th>
-                            @endif
-
-                            @foreach($results['columns'] as $key => $column)
-                                <th class="grid_head"
-                                    @if(isset($column['width']))
-                                        style="width: {{ $column['width'] }}"
-                                    @endif
-
-                                    @if(isset($column['sortable']) && $column['sortable'])
-                                        v-on:click="sortCollection('{{ $column['index'] }}')"
-                                    @endif
-                                >
-                                    {{ $column['label'] }}
-                                </th>
-                            @endforeach
-
-                            @if ($results['enableActions'])
-                                <th>
-                                    {{ __('ui::app.datagrid.actions') }}
-                                </th>
-                            @endif
-                        </tr>
-                    </thead>
+                    @include('ui::datagrid.partials.default-header')
 
                     @include('ui::datagrid.body', ['records' => $results['records'], 'actions' => $results['actions'], 'index' => $results['index'], 'columns' => $results['columns'],'enableMassActions' => $results['enableMassActions'], 'enableActions' => $results['enableActions'], 'norecords' => $results['norecords']])
                 </table>
@@ -339,10 +274,11 @@
                             this.formURL(this.columnOrAlias, this.stringCondition, this.stringValue, label)
                         } else if (this.type == 'number') {
                             indexConditions = true;
-                            if (this.filterIndex == this.columnOrAlias && (this.numberValue == 0 || this.numberValue < 0)) {
-                                    indexConditions = false;
 
-                                    alert('{{__('ui::app.datagrid.zero-index')}}');
+                            if (this.filterIndex == this.columnOrAlias && (this.numberValue == 0 || this.numberValue < 0)) {
+                                indexConditions = false;
+
+                                alert('{{__('ui::app.datagrid.zero-index')}}');
                             }
 
                             if(indexConditions)
@@ -403,12 +339,6 @@
                         for(i in this.filters) {
                             if (this.filters[i].column == 'sort') {
                                 this.currentSort = this.filters[i].val;
-
-                                // if (this.currentSort = 'asc') {
-                                //     this.currentSortIcon = this.sortUpIcon;
-                                // } else {
-                                //     this.currentSortIcon = this.sortDownIcon;
-                                // }
                             }
                         }
                     },
@@ -611,8 +541,8 @@
                         }
 
                         for(i = 0; i < moreSplitted.length; i++) {
-                            col = moreSplitted[i][0].replace(']','').split('[')[0];
-                            cond = moreSplitted[i][0].replace(']','').split('[')[1]
+                            col = moreSplitted[i][0].replace(']', '').split('[')[0];
+                            cond = moreSplitted[i][0].replace(']', '').split('[')[1]
                             val = moreSplitted[i][1];
 
                             label = 'cannotfindthislabel';
@@ -671,10 +601,12 @@
                     select: function() {
                         this.allSelected = false;
 
-                        if(this.dataIds.length == 0)
+                        if (this.dataIds.length == 0) {
                             this.massActionsToggle = false;
-                        else
+                            this.massActionType = null;
+                        } else {
                             this.massActionsToggle = true;
+                        }
                     },
 
                     //triggered when master checkbox is clicked
@@ -690,7 +622,7 @@
                                     i = 0;
                                     for(currentId in this.gridCurrentData.data[currentData]) {
                                         if (i==0)
-                                            this.dataIds.push(this.gridCurrentData.data[currentData][currentId]);
+                                            this.dataIds.push(this.gridCurrentData.data[currentData][this.filterIndex]);
 
                                         i++;
                                     }
@@ -730,12 +662,20 @@
                         }
                     },
 
+                    captureColumn: function(id) {
+                        element = document.getElementById(id);
+
+                        console.log(element.innerHTML);
+                    },
+
                     removeMassActions: function() {
                         this.dataIds = [];
 
                         this.massActionsToggle = false;
 
                         this.allSelected = false;
+
+                        this.massActionType = null;
                     }
                 }
             });

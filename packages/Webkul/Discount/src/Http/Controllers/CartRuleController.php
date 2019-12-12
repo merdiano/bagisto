@@ -3,7 +3,9 @@
 namespace Webkul\Discount\Http\Controllers;
 
 use Webkul\Discount\Repositories\CartRuleRepository as CartRule;
-use Webkul\Checkout\Repositories\CartRepository as Cart;
+use Webkul\Category\Repositories\CategoryRepository as Category;
+use Webkul\Attribute\Repositories\AttributeRepository as Attribute;
+use Webkul\Discount\Helpers\Cart\ConvertXToProductId as ConvertX;
 use Webkul\Discount\Repositories\CartRuleLabelsRepository as CartRuleLabels;
 use Webkul\Discount\Repositories\CartRuleCouponsRepository as CartRuleCoupons;
 
@@ -41,14 +43,33 @@ class CartRuleController extends Controller
     protected $cartRuleCoupon;
 
     /**
+     * To hold category repository instance
+     */
+    protected $category;
+
+    /**
+     * To hold attribute repository instance
+     */
+    protected $attribute;
+
+    /**
      * To hold the cart repository instance
      */
     protected $cart;
 
+    /**
+     * Convert X To Product ID.
+     *
+     */
+    protected $convertX;
+
     public function __construct(
         CartRule $cartRule,
         CartRuleCoupons $cartRuleCoupon,
-        CartRuleLabels $cartRuleLabel
+        CartRuleLabels $cartRuleLabel,
+        Attribute $attribute,
+        Category $category,
+        ConvertX $convertX
     )
     {
         $this->_config = request('_config');
@@ -59,11 +80,17 @@ class CartRuleController extends Controller
 
         $this->cartRuleLabel = $cartRuleLabel;
 
+        $this->attribute = $attribute;
+
+        $this->category = $category;
+
+        $this->convertX = $convertX;
+
         $this->appliedConfig = config('pricerules.cart');
     }
 
     /**
-     * @return view
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -71,21 +98,25 @@ class CartRuleController extends Controller
     }
 
     /**
-     * @return view
+     * @return \Illuminate\View\View
      */
     public function create()
     {
-        return view($this->_config['view'])->with('cart_rule', [$this->appliedConfig, [], $this->getStatesAndCountries()]);
+        return view($this->_config['view'])->with('cart_rule', [$this->appliedConfig, $this->category->getPartial(), $this->getStatesAndCountries(), $this->attribute->getPartial()]);
     }
 
     /**
+     * Stores the response from cart rule store page to datastore
+     *
      * @return redirect
      */
     public function store()
     {
-        $validated = $this->validate(request(), [
-            'name' => 'required|string',
+        $this->validate(request(), [
+            'name' => 'required|string|unique:cart_rules,name',
             'description' => 'string',
+            'starts_from' => 'nullable|date',
+            'ends_till' => 'nullable|date|after_or_equal:starts_from',
             'customer_groups' => 'required|array',
             'channels' => 'required|array',
             'status' => 'required|boolean',
@@ -95,7 +126,7 @@ class CartRuleController extends Controller
             'action_type' => 'required|string',
             'disc_amount' => 'required|numeric',
             'disc_quantity' => 'numeric',
-            'disc_threshold' => 'numeric',
+            // 'disc_threshold' => 'numeric',
             'free_shipping' => 'required|boolean',
             'apply_to_shipping' => 'required|boolean',
             'code' => 'string|required_if:auto_generation,0',
@@ -105,14 +136,11 @@ class CartRuleController extends Controller
 
         $data = request()->all();
 
+        $attribute_conditions = $data['all_attributes'];
+        unset($data['all_attributes']);
+
         // unset token
         unset($data['_token']);
-
-        // set usage limit
-        $data['usage_limit'] = 0;
-
-        // set per customer usage limit
-        $data['per_customer'] = 0;
 
         // check if starts_from is null
         if ($data['starts_from'] == "") {
@@ -145,20 +173,26 @@ class CartRuleController extends Controller
         // unset labels
         unset($data['label']);
 
-        // prepare json object from actions
-        if (isset($data['disc_amount']) && $data['action_type'] == config('pricerules.cart.validations.2')) {
-                $data['actions'] = [
-                    'action_type' => $data['action_type'],
-                    'disc_amount' => $data['disc_amount'],
-                    'disc_threshold' => $data['disc_threshold']
-                ];
+        while (gettype($attribute_conditions) == 'string') {
+            $attribute_conditions = json_decode($attribute_conditions);
+        }
 
-            $data['disc_quantity'] = $data['disc_amount'];
-        } else {
+        if (! isset($attribute_conditions) || ! (count($attribute_conditions->categories) || count($attribute_conditions->attributes))) {
+            $data['uses_attribute_conditions'] = 0;
+
             $data['actions'] = [
                 'action_type' => $data['action_type'],
                 'disc_amount' => $data['disc_amount'],
                 'disc_quantity' => $data['disc_quantity']
+            ];
+        } else {
+            $data['uses_attribute_conditions'] = 1;
+
+            $data['actions'] = [
+                'action_type' => $data['action_type'],
+                'disc_amount' => $data['disc_amount'],
+                'disc_quantity' => $data['disc_quantity'],
+                'attribute_conditions' => $attribute_conditions
             ];
         }
 
@@ -201,7 +235,7 @@ class CartRuleController extends Controller
             }
 
             // set coupon usage per customer same as per_customer limit which is disabled for now
-            $coupons['usage_per_customer'] = $data['per_customer']; //0 is for unlimited usage
+            // $coupons['usage_per_customer'] = $data['per_customer']; //0 is for unlimited usage
             // unset coupon code from coupon section
             unset($data['code']);
             // } else {
@@ -228,6 +262,11 @@ class CartRuleController extends Controller
 
         // create a cart rule
         $ruleCreated = $this->cartRule->create($data);
+
+        // can execute convertX here after when the rule is updated
+        if (isset($attribute_conditions) && $data['uses_attribute_conditions']) {
+            $this->convertX->convertX($ruleCreated->id, $attribute_conditions);
+        }
 
         // create customer groups for cart rule
         $ruleGroupCreated = $this->cartRule->CustomerGroupSync($customer_groups, $ruleCreated);
@@ -277,7 +316,7 @@ class CartRuleController extends Controller
     }
 
     /**
-     * @return view
+     * @return \Illuminate\View\View
      */
     public function edit($id)
     {
@@ -285,20 +324,25 @@ class CartRuleController extends Controller
 
         return view($this->_config['view'])->with('cart_rule', [
             $this->appliedConfig,
-            [],
+            $this->category->getPartial(),
             $this->getStatesAndCountries(),
-            $cart_rule
+            $cart_rule,
+            $this->attribute->getPartial()
         ]);
     }
 
     /**
+     * Collects the response from cart rule update page and update datastore
+     *
      * @return redirect
      */
     public function update($id)
     {
         $this->validate(request(), [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:cart_rules,name,'.$id,
             'description' => 'string',
+            'starts_from' => 'nullable|date',
+            'ends_till' => 'nullable|date|after_or_equal:starts_from',
             'customer_groups' => 'required|array',
             'channels' => 'required|array',
             'status' => 'required|boolean',
@@ -308,7 +352,7 @@ class CartRuleController extends Controller
             'action_type' => 'required|string',
             'disc_amount' => 'required|numeric',
             'disc_quantity' => 'required|numeric',
-            'disc_threshold' => 'required|numeric',
+            // 'disc_threshold' => 'required|numeric',
             'free_shipping' => 'required|boolean',
             'apply_to_shipping' => 'required|boolean',
             'code' => 'string|required_if:user_coupon,1',
@@ -319,14 +363,11 @@ class CartRuleController extends Controller
         // collecting request in $data
         $data = request()->all();
 
+        $attribute_conditions = $data['all_attributes'];
+        unset($data['all_attributes']);
+
         // unset request token from $data
         unset($data['_token']);
-
-        // set rule uasge limit
-        $data['usage_limit'] = 0;
-
-        // set rule usage per customer
-        $data['per_customer'] = 0;
 
         // check if starts_from is null
         if ($data['starts_from'] == "") {
@@ -362,19 +403,28 @@ class CartRuleController extends Controller
         unset($data['attributes']);
 
         // prepare actions from data for json action
-        if (isset($data['disc_amount']) && $data['action_type'] == config('pricerules.cart.validations.2')) {
-            $data['actions'] = [
-                'action_type' => $data['action_type'],
-                'disc_amount' => $data['disc_amount'],
-                'disc_threshold' => $data['disc_threshold']
-            ];
+        $attribute_conditions = json_decode($attribute_conditions);
 
-            $data['disc_quantity'] = $data['disc_amount'];
-        } else {
+        while (gettype($attribute_conditions) == 'string') {
+            $attribute_conditions = json_decode($attribute_conditions);
+        }
+
+        if (! isset($attribute_conditions) || ! (count($attribute_conditions->categories) || count($attribute_conditions->attributes))) {
+            $data['uses_attribute_conditions'] = 0;
+
             $data['actions'] = [
                 'action_type' => $data['action_type'],
                 'disc_amount' => $data['disc_amount'],
                 'disc_quantity' => $data['disc_quantity']
+            ];
+        } else {
+            $data['uses_attribute_conditions'] = 1;
+
+            $data['actions'] = [
+                'action_type' => $data['action_type'],
+                'disc_amount' => $data['disc_amount'],
+                'disc_quantity' => $data['disc_quantity'],
+                'attribute_conditions' => $attribute_conditions
             ];
         }
 
@@ -436,6 +486,15 @@ class CartRuleController extends Controller
         // update cart rule
         $ruleUpdated = $this->cartRule->update($data, $id);
 
+        if (isset($attribute_conditions) && $data['uses_attribute_conditions']) {
+            // can execute convert X here after when the rule is updated
+            $this->convertX->convertX($ruleUpdated->id, $attribute_conditions);
+        } else {
+            $ruleUpdated->update([
+                'product_ids' => null
+            ]);
+        }
+
         // update customer groups for cart rule
         $ruleGroupUpdated = $this->cartRule->CustomerGroupSync($customer_groups, $ruleUpdated);
 
@@ -490,7 +549,7 @@ class CartRuleController extends Controller
 
             return response()->json(['message' => true], 200);
         } else {
-            session()->flash('success', trans('admin::app.promotion.status.delete-failed'));
+            session()->flash('error', trans('admin::app.promotion.status.delete-failed'));
 
             return response()->json(['message' => false], 400);
         }

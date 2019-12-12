@@ -7,6 +7,7 @@ use Webkul\Checkout\Repositories\CartRepository;
 use Webkul\Checkout\Repositories\CartItemRepository;
 use Webkul\API\Http\Resources\Checkout\Cart as CartResource;
 use Cart;
+use Webkul\Customer\Repositories\WishlistRepository;
 
 /**
  * Cart controller
@@ -38,27 +39,38 @@ class CartController extends Controller
     protected $cartItemRepository;
 
     /**
+     * WishlistRepository object
+     *
+     * @var Object
+     */
+    protected $wishlistRepository;
+
+    /**
      * Controller instance
      *
      * @param Webkul\Checkout\Repositories\CartRepository     $cartRepository
      * @param Webkul\Checkout\Repositories\CartItemRepository $cartItemRepository
+     * @param Webkul\Checkout\Repositories\WishlistRepository $wishlistRepository
      */
     public function __construct(
         CartRepository $cartRepository,
-        CartItemRepository $cartItemRepository
+        CartItemRepository $cartItemRepository,
+        WishlistRepository $wishlistRepository
     )
     {
         $this->guard = request()->has('token') ? 'api' : 'customer';
 
         auth()->setDefaultDriver($this->guard);
-        
+
         // $this->middleware('auth:' . $this->guard);
-        
+
         $this->_config = request('_config');
 
         $this->cartRepository = $cartRepository;
 
         $this->cartItemRepository = $cartItemRepository;
+
+        $this->wishlistRepository = $wishlistRepository;
     }
 
     /**
@@ -88,15 +100,19 @@ class CartController extends Controller
     {
         Event::fire('checkout.cart.item.add.before', $id);
 
-        $result = Cart::add($id, request()->except('_token'));
+        $result = Cart::addProduct($id, request()->except('_token'));
 
         if (! $result) {
             $message = session()->get('warning') ?? session()->get('error');
+
             return response()->json([
                     'error' => session()->get('warning')
                 ], 400);
         }
 
+        if ($customer = auth($this->guard)->user())
+            $this->wishlistRepository->deleteWhere(['product_id' => $id, 'customer_id' => $customer->id]);
+        
         Event::fire('checkout.cart.item.add.after', $result);
 
         Cart::collectTotals();
@@ -129,7 +145,7 @@ class CartController extends Controller
 
             Event::fire('checkout.cart.item.update.before', $itemId);
 
-            Cart::updateItem($item->product_id, ['quantity' => $qty], $itemId);
+            Cart::updateItems(request()->all());
 
             Event::fire('checkout.cart.item.update.after', $item);
         }
@@ -152,7 +168,7 @@ class CartController extends Controller
     public function destroy()
     {
         Event::fire('checkout.cart.delete.before');
-        
+
         Cart::deActivateCart();
 
         Event::fire('checkout.cart.delete.after');

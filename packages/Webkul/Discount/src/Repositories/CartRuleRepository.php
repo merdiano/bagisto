@@ -10,26 +10,46 @@ use Webkul\Discount\Repositories\CartRuleLabelsRepository as CartRuleLabels;
 use Illuminate\Container\Container as App;
 
 /**
- * Cart Rule Reposotory
+ * CartRuleReposotory
  *
  * @author  Prashant Singh <prashant.singh852@webkul.com>
- * @copyright 2018 Webkul Software Pvt Ltd (http://www.webkul.com)
+ * @copyright 2019 Webkul Software Pvt Ltd (http://www.webkul.com)
  */
 class CartRuleRepository extends Repository
 {
+    /**
+     * Will hold cartRuleChannelsRepository instance
+     */
     protected $cartRuleChannels;
 
+    /**
+     * Will hold cartRuleCustomerGroupsRepository instance
+     */
     protected $cartRuleCustomerGroups;
 
+    /**
+     * Will hold cartRuleCoupons instance
+     */
     protected $cartRuleCoupons;
 
+    /**
+     * Will hold cartRuleCustomerGroupsRepository instance
+     */
     protected $cartRuleLabels;
 
     /**
-     *
+     * @param CartRuleChannels $cartRuleChannels
+     * @param CartRuleCustomerGroups $cartRuleCustomerGroups
+     * @param CartRuleCoupons $cartRuleCoupons
+     * @param
      */
-    public function __construct(CartRuleChannels $cartRuleChannels, CartRuleCustomerGroups $cartRuleCustomerGroups, CartRuleCoupons $cartRuleCoupons, CartRuleLabels $cartRuleLabels, App $app)
-    {
+    public function __construct(
+        CartRuleChannels $cartRuleChannels,
+        CartRuleCustomerGroups $cartRuleCustomerGroups,
+        CartRuleCoupons $cartRuleCoupons,
+        CartRuleLabels $cartRuleLabels,
+        App $app
+        ) {
         $this->cartRuleChannels = $cartRuleChannels;
         $this->cartRuleCustomerGroups = $cartRuleCustomerGroups;
         $this->cartRuleCoupons = $cartRuleCoupons;
@@ -61,9 +81,8 @@ class CartRuleRepository extends Repository
         foreach ($oldCustomerGroups as $key => $oldCustomerGroup) {
             $found = 0;
             foreach ($newCustomerGroups as $newCustomerGroup) {
-                if ($oldCustomerGroup['customer_group_id'] == $newCustomerGroup) {
+                if ($oldCustomerGroup['customer_group_id'] == $newCustomerGroup)
                     $found = 1;
-                }
             }
 
             if ($found == 0) {
@@ -78,9 +97,8 @@ class CartRuleRepository extends Repository
             foreach ($oldCustomerGroups as $oldCustomerGroup) {
                 $found = 0;
                 foreach ($newCustomerGroups as $key => $newCustomerGroup) {
-                    if ($oldCustomerGroup['customer_group_id'] == $newCustomerGroup) {
+                    if ($oldCustomerGroup['customer_group_id'] == $newCustomerGroup)
                         unset($newCustomerGroups[$key]);
-                    }
                 }
             }
         }
@@ -102,6 +120,7 @@ class CartRuleRepository extends Repository
     public function ChannelSync($newChannels, $cartRule)
     {
         $oldChannels = array();
+
         foreach ($cartRule->channels as $oldChannel) {
             array_push($oldChannels, ['id' => $oldChannel->id, 'channel_id' => $oldChannel->channel_id]);
         }
@@ -109,9 +128,8 @@ class CartRuleRepository extends Repository
         foreach ($oldChannels as $key => $oldChannel) {
             $found = 0;
             foreach ($newChannels as $newChannel) {
-                if ($oldChannel['channel_id'] == $newChannel) {
+                if ($oldChannel['channel_id'] == $newChannel)
                     $found = 1;
-                }
             }
 
             if ($found == 0) {
@@ -125,10 +143,10 @@ class CartRuleRepository extends Repository
         if (count($newChannels) && count($oldChannels)) {
             foreach ($oldChannels as $oldChannel) {
                 $found = 0;
+
                 foreach ($newChannels as $key => $newChannel) {
-                    if ($oldChannel['channel_id'] == $newChannel) {
+                    if ($oldChannel['channel_id'] == $newChannel)
                         unset($newChannels[$key]);
-                    }
                 }
             }
         }
@@ -137,6 +155,7 @@ class CartRuleRepository extends Repository
         foreach ($newChannels as $newChannel) {
             $data['channel_id'] = $newChannel;
             $data['cart_rule_id'] = $cartRule->id;
+
             $this->cartRuleChannels->create($data);
         }
 
@@ -155,9 +174,7 @@ class CartRuleRepository extends Repository
             $updated = 0;
             foreach ($cartRule->labels as $label) {
                 if ($label->channel->code == $channelCode && $label->locale->code == $localeCode) {
-                    $label->update([
-                        'label' => $localeValue
-                    ]);
+                    $label->update(['label' => $localeValue]);
 
                     $updated = 1;
                 }
@@ -165,9 +182,8 @@ class CartRuleRepository extends Repository
 
             if ($updated == 0) {
                 foreach (core()->getAllChannels() as $channel) {
-                    if ($channel->code == $channelCode) {
+                    if ($channel->code == $channelCode)
                         $newLabel['channel_id'] = $channel->id;
-                    }
 
                     foreach($channel->locales as $locale) {
                         if ($localeCode == $locale->code) {

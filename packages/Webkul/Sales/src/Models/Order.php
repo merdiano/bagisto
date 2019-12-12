@@ -60,6 +60,14 @@ class Order extends Model implements OrderContract
     }
 
     /**
+     * Get the order items record associated with the order.
+     */
+    public function all_items()
+    {
+        return $this->hasMany(OrderItemProxy::modelClass());
+    }
+
+    /**
      * Get the order shipments record associated with the order.
      */
     public function shipments()
@@ -73,6 +81,14 @@ class Order extends Model implements OrderContract
     public function invoices()
     {
         return $this->hasMany(InvoiceProxy::modelClass());
+    }
+
+    /**
+     * Get the order refunds record associated with the order.
+     */
+    public function refunds()
+    {
+        return $this->hasMany(RefundProxy::modelClass());
     }
     
     /**
@@ -140,6 +156,21 @@ class Order extends Model implements OrderContract
     }
 
     /**
+     * Checks if cart have stockable items
+     *
+     * @return boolean
+     */
+    public function haveStockableItems()
+    {
+        foreach ($this->items as $item) {
+            if ($item->getTypeInstance()->isStockable())
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Checks if new shipment is allow or not
      */
     public function canShip()
@@ -148,9 +179,8 @@ class Order extends Model implements OrderContract
             return false;
 
         foreach ($this->items as $item) {
-            if ($item->qty_to_ship > 0) {
+            if ($item->canShip())
                 return true;
-            }
         }
 
         return false;
@@ -165,16 +195,15 @@ class Order extends Model implements OrderContract
             return false;
             
         foreach ($this->items as $item) {
-            if ($item->qty_to_invoice > 0) {
+            if ($item->canInvoice())
                 return true;
-            }
         }
         
         return false;
     }
 
     /**
-     * Checks if order could can canceled on not
+     * Checks if order can be canceled or not
      */
     public function canCancel()
     {
@@ -182,10 +211,28 @@ class Order extends Model implements OrderContract
             return false;
             
         foreach ($this->items as $item) {
-            if ($item->qty_to_cancel > 0) {
+            if ($item->canCancel())
                 return true;
-            }
         }
+
+        return false;
+    }
+
+    /**
+     * Checks if order can be refunded or not
+     */
+    public function canRefund()
+    {
+        if ($this->status == 'fraud')
+            return false;
+            
+        foreach ($this->items as $item) {
+            if ($item->qty_to_refund > 0)
+                return true;
+        }
+
+        if ($this->base_grand_total_invoiced - $this->base_grand_total_refunded - $this->refunds()->sum('base_adjustment_fee') > 0)
+            return true;
 
         return false;
     }

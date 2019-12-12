@@ -1,6 +1,38 @@
 <?php
 
 return [
+    'save' => 'Save',
+    'create' => 'Create',
+    'update' => 'Update',
+    'delete' => 'Delete',
+    'failed' => 'Failed',
+    'store' => 'Store',
+    'image' => 'Image',
+    'no result' => 'No result',
+    'product' => 'Product',
+    'attribute' => 'Attribute',
+    'actions' => 'Actions',
+    'id' => 'ID',
+    'action' => 'action',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'true' => 'True',
+    'false' => 'False',
+    'apply' => 'Apply',
+    'action' => 'Action',
+    'label' => 'Label',
+    'name' => 'Name',
+    'title' => 'Title',
+    'code' => 'Code',
+    'type' => 'Type',
+    'required' => 'Required',
+    'unique' => 'Unique',
+    'locale-based' => 'Locale based',
+    'channel-based' => 'Channel based',
+    'status' => 'Status',
+    'select-option' => 'Select option',
+    'category' => 'Category',
+
     'common' => [
         'no-result-found' => 'We could not find any records.',
         'country' => 'Country',
@@ -18,6 +50,7 @@ return [
         'orders' => 'Orders',
         'shipments' => 'Shipments',
         'invoices' => 'Invoices',
+        'refunds' => 'Refunds',
         'catalog' => 'Catalog',
         'products' => 'Products',
         'categories' => 'Categories',
@@ -41,7 +74,8 @@ return [
         'tax-categories' => 'Tax Categories',
         'tax-rates' => 'Tax Rates',
         'promotion' => 'Promotions',
-        'discount' => 'Discount'
+        'discount' => 'Discount',
+        'cms' => 'CMS'
     ],
 
     'acl' => [
@@ -98,7 +132,7 @@ return [
         'order-count' => ':count Orders',
         'revenue' => 'Revenue :total',
         'stock-threshold' => 'Stock Threshold',
-        'qty-left' => ':qty Left',
+        'qty-left' => ':qty Left'
     ],
 
     'datagrid' => [
@@ -107,6 +141,7 @@ return [
             'delete-success' => 'Selected index of :resource were successfully deleted',
             'partial-action' => 'Some actions were not performed due restricted system constraints on :resource',
             'update-success' => 'Selected index of :resource were successfully updated',
+            'no-resource' => 'The resource provided for insufficient for the action'
         ],
 
         'id' => 'ID',
@@ -126,7 +161,11 @@ return [
         'hostname' => 'Hostname',
         'email' => 'Email',
         'group' => 'Group',
+        'phone' => 'Phone',
+        'gender' => 'Gender',
         'title' => 'Title',
+        'layout' => 'Layout',
+        'url-key' => 'URL Key',
         'comment' => 'Comment',
         'product-name' => 'Product',
         'currency-name' => 'Currency Name',
@@ -161,7 +200,10 @@ return [
         'ends-till' => 'Ends Till',
         'per-cust' => 'Per Customer',
         'usage-throttle' => 'Usage Times',
-        'for-guest' => 'For Guest'
+        'for-guest' => 'For Guest',
+        'order_number' => 'Order Number',
+        'refund-date' => 'Refund Date',
+        'refunded' => 'Refunded'
     ],
 
     'account' => [
@@ -184,7 +226,7 @@ return [
             'password' => 'Password',
             'confirm-password' => 'Confirm Password',
             'back-link-title' => 'Back to Sign In',
-            'submit-btn-title' => 'Email Password Reset Link'
+            'submit-btn-title' => 'Send Password Reset Email'
         ],
 
         'reset-password' => [
@@ -284,6 +326,7 @@ return [
             'item-invoice' => 'Invoiced (:qty_invoiced)',
             'item-shipped' => 'shipped (:qty_shipped)',
             'item-canceled' => 'Canceled (:qty_canceled)',
+            'item-refunded' => 'Refunded (:qty_refunded)',
             'price' => 'Price',
             'total' => 'Total',
             'subtotal' => 'Subtotal',
@@ -298,7 +341,9 @@ return [
             'total-paid' => 'Total Paid',
             'total-refunded' => 'Total Refunded',
             'total-due' => 'Total Due',
-            'cancel-confirm-msg' => 'Are you sure you want to cancel this order ?'
+            'cancel-confirm-msg' => 'Are you sure you want to cancel this order ?',
+            'refund-btn-title' => 'Refund',
+            'refunds' => 'Refunds'
         ],
 
         'invoices' => [
@@ -349,6 +394,30 @@ return [
             'creation-error' => 'Shipment can not be created for this order.',
             'order-error' => 'Order shipment creation is not allowed.',
             'quantity-invalid' => 'Requested quantity is invalid or not available.',
+        ],
+
+        'refunds' => [
+            'title' => 'Refunds',
+            'id' => 'Id',
+            'add-title' => 'Create Refund',
+            'save-btn-title' => 'Refund',
+            'order-id' => 'Order Id',
+            'qty-ordered' => 'Qty Ordered',
+            'qty-to-refund' => 'Qty To Refund',
+            'refund-shipping' => 'Refund Shipping',
+            'adjustment-refund' => 'Adjustment Refund',
+            'adjustment-fee' => 'Adjustment Fee',
+            'update-qty' => 'Update Quantities',
+            'invalid-qty' => 'Found invalid quantity for return items.',
+            'refund-limit-error' => 'The most money available to refund is :amount.',
+            'refunded' => 'Refunded',
+            'date' => 'Refund Date',
+            'customer-name' => 'Customer Name',
+            'status' => 'Status',
+            'action' => 'Action',
+            'view-title' => 'Refund #:refund_id',
+            'invalid-refund-amount-error' => 'Refund amount should be non zero.'
+
         ]
     ],
 
@@ -390,6 +459,18 @@ return [
             'images' => 'Images',
             'inventories' => 'Inventories',
             'variations' => 'Variations',
+            'downloadable' => 'Downloadable Information',
+            'links' => 'Links',
+            'add-link-btn-title' => 'Add Link',
+            'samples' => 'Samples',
+            'add-sample-btn-title' => 'Add Sample',
+            'downloads' => 'Download Allowed',
+            'file' => 'File',
+            'sample' => 'Sample',
+            'upload-file' => 'Upload File',
+            'url' => 'Url',
+            'sort-order' => 'Sort Order',
+            'browse-file' => 'Browse File',
             'product-link' => 'Linked Products',
             'cross-selling' => 'Cross Selling',
             'up-selling' => 'Up Selling',
@@ -397,7 +478,21 @@ return [
             'product-search-hint' => 'Start typing product name',
             'no-result-found' => 'Products not found with same name.',
             'searching' => 'Searching ...',
-            'channel' => 'Channels'
+            'grouped-products' => 'Grouped Products',
+            'search-products' => 'Search Products',
+            'no-result-found' => 'Products not found with same name.',
+            'channel' => 'Channels',
+            'bundle-items' => 'Bundle Items',
+            'add-option-btn-title' => 'Add Option',
+            'option-title' => 'Option Title',
+            'input-type' => 'Input Type',
+            'is-required' => 'Is Required',
+            'select' => 'Select',
+            'radio' => 'Radio',
+            'checkbox' => 'Checkbox',
+            'multiselect' => 'Multiselect',
+            'new-option' => 'New Option',
+            'is-default' => 'Is Default'
         ],
 
         'attributes' => [
@@ -603,6 +698,8 @@ return [
             'source_currency' => 'Source Currency',
             'target_currency' => 'Target Currency',
             'rate' => 'Rate',
+            'exchange-class-not-found' => ':service exchange rate class not found',
+            'update-rates' => 'Update rates using :service',
             'create-success' => 'Exchange Rate created successfully.',
             'update-success' => 'Exchange Rate updated successfully.',
             'delete-success' => 'Exchange Rate deleted successfully.',
@@ -652,7 +749,7 @@ return [
             'locales' => 'Locales',
             'default-locale' => 'Default Locale',
             'currencies' => 'Currencies',
-            'base-currency' => 'Base Currency',
+            'base-currency' => 'Default Currency',
             'root-category' => 'Root Category',
             'inventory_sources' => 'Inventory Sources',
             'design' => 'Design',
@@ -665,10 +762,15 @@ return [
             'update-success' => 'Channel updated successfully.',
             'delete-success' => 'Channel deleted successfully.',
             'last-delete-error' => 'At least one Channel is required.',
+            'seo' => 'Home page SEO',
+            'seo-title' => 'Meta title',
+            'seo-description' => 'Meta description',
+            'seo-keywords' => 'Meta keywords'
         ],
 
         'sliders' => [
-            'title' => 'Title',
+            'title' => 'Sliders',
+            'name' => 'Name',
             'add-title' => 'Create Slider',
             'edit-title' => 'Edit Slider',
             'save-btn-title' => 'Save Slider',
@@ -676,12 +778,12 @@ return [
             'image' => 'Image',
             'content' => 'Content',
             'channels' => 'Channel',
-            'created-success' => 'Slider Item Created Successfully',
-            'created-fault' => 'Error In Creating Slider Item',
-            'update-success' => 'Slider Item Successfully Updated',
-            'update-fail' => 'Slider Cannot Be Updated',
-            'delete-success' => 'Cannot Delete The Last Slider Item',
-            'delete-fail' => 'Slider Item Successfully Deleted'
+            'created-success' => 'Slider item created successfully',
+            'created-fault' => 'Error in creating slider item',
+            'update-success' => 'Slider item successfully updated',
+            'update-fail' => 'Slider cannot be updated',
+            'delete-success' => 'Cannot delete last llider item',
+            'delete-fail' => 'Slider item successfully deleted'
         ],
 
         'tax-categories' => [
@@ -733,6 +835,9 @@ return [
             'update-error' => 'Error! Tax Rate Cannot Be Updated',
             'delete' => 'Tax Rate Deleted Successfully',
             'atleast-one' => 'Cannot Delete Last Tax Rate'
+        ],
+        'development' => [
+            'title' => 'Development',
         ]
     ],
 
@@ -747,6 +852,35 @@ return [
             'name' => 'Name',
             'is_user_defined' => 'User Defined',
             'yes' => 'Yes'
+        ],
+
+        'addresses' => [
+            'title' => ':customer_name\'s Addresses List',
+            'create-title' => 'Create Customer\'s Address',
+            'edit-title' => 'Update Customer\'s Address',
+            'title-orders' => ':customer_name\'s Orders List',
+            'address-list' => 'Address\'s List',
+            'order-list' => 'Order\'s List',
+            'address-id' => 'Address ID',
+            'address-1' => 'Address 1',
+            'city' => 'City',
+            'state-name' => 'State',
+            'country-name' => 'Country',
+            'postcode' => 'Post Code',
+            'default-address' => 'Default Address',
+            'yes' => 'Yes',
+            'not-approved' => 'Not Approved',
+            'no' => 'No',
+            'dash' => '-',
+            'delete' => 'Delete',
+            'create-btn-title' => 'Add Address',
+            'save-btn-title' => 'Save Address',
+            'general' => 'General',
+            'success-create' => 'Success: Customer address created successfully.',
+            'success-update' => 'Success: Customer address updated successfully.',
+            'success-delete' => 'Success: Customer address deleted successfully.',
+            'success-mass-delete' => 'Success: selected addresses deleted successfully.',
+            'error-create' => 'Error: Customer address not created.',
         ],
 
         'note' => [
@@ -810,21 +944,52 @@ return [
     ],
 
     'promotion' => [
+        'information' => 'Information',
+        'conditions' => 'Conditions',
+        'actions' => 'Actions',
+        'coupons' => 'Coupons',
+        'zero-unlimited' => 'Zero denotes unlimited usage here',
         'catalog-rule' => 'Catalog Rules',
         'cart-rule' => 'Cart Rules',
-        'add-catalog-rule' => 'Add Catalog Rule',
+        'add-catalog-rule' => 'Add Rule',
         'add-cart-rule' => 'Add Cart Rule',
         'edit-cart-rule' => 'Edit Cart Rule',
         'edit-catalog-rule' => 'Edit Catalog Rule',
         'create-catalog-rule' => 'Create Catalog Rule',
         'create-cart-rule' => 'Create Cart Rule',
         'save-btn-title' => 'Create',
-        'edit-btn-title' => 'Edit',
+        'edit-btn-title' => 'Save',
         'save' => 'Save',
-        'select-attr' => 'Select Attribute',
-        'select-attr-fam' => 'Select Attribute Family',
         'select-cart-attr' => 'Select Cart Attribute',
+        'select-products' => 'How to choose products ?',
+        'select-category' => 'Select by Categories',
+        'select-attribute' => 'Select by Attributes',
+        'cannot-activate-catalog-rule' => 'Cannot activate catalog rule',
+        'catalog-rule-already-activated' => 'Catalog rule is already activated',
+        'catalog-rule-activated' => 'Catalog rule is activated',
+        'select-attribute' => 'Select :attribute',
+        'enter-attribute' => 'Enter :attribute',
+        'add-condition' => 'Add Condition',
+        'cart-properties' => 'Cart Properties',
+        'yes' => 'Yes',
+        'no' => 'No',
+        'note' => 'Note',
+        'apply' => 'Apply',
+        'rule-name' => 'Enter Rule Name',
+        'rule-desc' => 'Enter Rule Description',
+        'convert-x-note' => 'If this section is left empty, then rule will get applied to all the products in the cart.',
+        'declut' => 'Declutter',
+        'processing-done' => 'Rules processing done',
+        'declut-success' => 'Catalog rules decluttering successful',
+        'declut-failure' => 'Catalog rules decluttering failed',
+        'add-attr-condition' => 'Add Attribute Condition',
         'general-info' => [
+            'sku-like' => 'SKU Like',
+            'on-shipping' => 'If applied on shipping',
+            'discount' => 'Discount',
+            'shipping-apply-info' => 'It signifies how rule behaves when it is used for shipping',
+            'general-info' => 'General Info',
+            'options' => 'Options',
             'name' => 'Rule Name',
             'description' => 'Description',
             'starts-from' => 'Start',
@@ -859,7 +1024,12 @@ return [
             'is-guest' => 'For Guests',
             'disc_qty' => 'Max. Quantity Allowed To Be Discounted',
             'test-mode' => 'Choose how to test conditions',
-            'labels' => 'Labels'
+            'labels' => 'Labels',
+            'prefix' => 'Prefix',
+            'suffix' => 'Suffix',
+            'code' => 'Code',
+            'global-label' => 'Global Label',
+            'label' => 'Label'
         ],
 
         'status' => [
@@ -869,7 +1039,7 @@ return [
             'update-success' => 'Success! rule updated',
             'update-coupon-success' => 'Success! rule updated along with coupon',
             'update-failed' => 'Error! cannot update',
-            'delete-success' => 'Sucess! rule deleted',
+            'delete-success' => 'Success! rule deleted',
             'delete-failed' => 'Error! cannot delete',
             'coupon-applied' => 'Coupon used',
             'coupon-failed' => 'Coupon failed to apply',
@@ -944,6 +1114,40 @@ return [
         'illegal-format' => 'Error! This type of format is either not supported or its illegal format'
     ],
 
+    'cms' => [
+        'pages' => [
+            'general' => 'General',
+            'seo' => 'SEO',
+            'pages' => 'Page',
+            'title' => 'pages',
+            'add-title' => 'Add Page',
+            'content' => 'Content',
+            'url-key' => 'URL Key',
+            'channel' => 'Channel',
+            'locale' => 'Locale',
+            'create-btn-title' => 'Save Page',
+            'edit-title' => 'Edit Page',
+            'edit-btn-title' => 'Save Page',
+            'create-success' => 'Page created successfully',
+            'create-partial' => 'Some of the pages requested already exists',
+            'create-failure' => 'All pages requested already exists',
+            'update-success' => 'Page updated successfully',
+            'update-failure' => 'Page cannot be updated',
+            'page-title' => 'Page Title',
+            'layout' => 'Layout',
+            'meta_keywords' => 'Meta Keywords',
+            'meta_description' => 'Meta Description',
+            'meta_title' => 'Meta Title',
+            'delete-success' => 'CMS page deleted successfully',
+            'delete-failure' => 'CMS page cannot be deleted',
+            'preview' => 'Preview',
+            'one-col' => '<div class="mt-10">Use class: <b>"static-container one-column"</b> for one column layout.</div>',
+            'two-col' => '<div class="mt-10">Use class: <b>"static-container two-column"</b> for two column layout.</div>',
+            'three-col' => '<div class="mt-10">Use class: <b>"static-container three-column"</b> for three column layout.</div>',
+            'helper-classes' => 'Helper Classes'
+        ]
+    ],
+
     'response' => [
         'being-used' => 'This resource :name is getting used in :source',
         'cannot-delete-default' => 'Cannot delete the default channel',
@@ -962,7 +1166,8 @@ return [
         'create-root-failure' => 'Category with name root already exists',
         'cancel-success' => ':name canceled successfully.',
         'cancel-error' => ':name can not be canceled.',
-        'already-taken' => 'The :name has already been taken.'
+        'already-taken' => 'The :name has already been taken.',
+        'order-pending' => 'Cannot delete account because some Order(s) are pending or processing state.'
     ],
 
     'footer' => [
@@ -1013,14 +1218,22 @@ return [
             'footer' => 'Footer',
             'content' => 'Content',
             'footer-content' => 'Footer Text',
+            'footer-toggle' => 'Toggle footer',
             'locale-options' => 'Unit Options',
             'weight-unit' => 'Weight Unit',
+            'admin-page-limit' => 'Default Items Per Page (Admin)',
             'design' => 'Design',
             'admin-logo' => 'Admin Logo',
             'logo-image' => 'Logo Image',
             'credit-max' => 'Customer Credit Max',
             'credit-max-value' => 'Credit Max Value',
-            'use-credit-max' => 'Use Credit Max'
+            'use-credit-max' => 'Use Credit Max',
+            'order-settings' => 'Order Settings',
+            'orderNumber' => 'Order Number Settings',
+            'order-number-prefix' => 'Order Number Prefix',
+            'order-number-length' => 'Order Number Length',
+            'order-number-suffix' => 'Order Number Suffix',
+            'default' => 'Default',
         ]
     ]
 ];

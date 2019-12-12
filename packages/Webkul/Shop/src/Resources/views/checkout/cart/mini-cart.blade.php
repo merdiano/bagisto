@@ -3,10 +3,6 @@
 <?php $cart = cart()->getCart(); ?>
 
 @if ($cart)
-    @php
-        Cart::collectTotals();
-    @endphp
-
     <?php $items = $cart->items; ?>
 
     <div class="dropdown-toggle">
@@ -42,12 +38,9 @@
 
                         <div class="item">
                             <div class="item-image" >
-                                <?php
-                                    if ($item->type == "configurable")
-                                        $images = $productImageHelper->getProductBaseImage($item->child->product);
-                                    else
-                                        $images = $productImageHelper->getProductBaseImage($item->product);
-                                ?>
+                                @php
+                                    $images = $item->product->getTypeInstance()->getBaseImage($item);
+                                @endphp
                                 <img src="{{ $images['small_image_url'] }}" />
                             </div>
 
@@ -60,10 +53,14 @@
 
 
                                 {!! view_render_event('bagisto.shop.checkout.cart-mini.item.options.before', ['item' => $item]) !!}
-
-                                @if ($item->type == "configurable")
+                                
+                                @if (isset($item->additional['attributes']))
                                     <div class="item-options">
-                                        {{ trim(Cart::getProductAttributeOptionDetails($item->child->product)['html']) }}
+                                        
+                                        @foreach ($item->additional['attributes'] as $attribute)
+                                            <b>{{ $attribute['attribute_name'] }} : </b>{{ $attribute['option_label'] }}</br>
+                                        @endforeach
+
                                     </div>
                                 @endif
 

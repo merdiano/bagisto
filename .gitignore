@@ -5,7 +5,6 @@
 /public/js
 /public/vendor
 /public/themes
-/storage/*.key
 /vendor
 /.idea
 /.vscode
@@ -17,5 +16,9 @@ yarn-error.log
 .env
 /ignorables/*
 composer.lock
+yarn.lock
 package-lock.json
 yarn.lock
+.php_cs.cache
+storage/
+storage/*.key

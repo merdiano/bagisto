@@ -29,6 +29,8 @@
                     @csrf()
                     <input name="_method" type="hidden" value="PUT">
 
+                    {!! view_render_event('bagisto.admin.settings.currencies.edit.before') !!}
+
                     <accordian :title="'{{ __('admin::app.settings.currencies.general') }}'" :active="true">
                         <div slot="body">
 
@@ -44,9 +46,15 @@
                                 <input v-validate="'required'" class="control" id="name" name="name" data-vv-as="&quot;{{ __('admin::app.settings.currencies.name') }}&quot;" value="{{ old('name') ?: $currency->name }}"/>
                                 <span class="control-error" v-if="errors.has('name')">@{{ errors.first('name') }}</span>
                             </div>
+
+                            <div class="control-group">
+                                <label for="symbol">{{ __('admin::app.settings.currencies.symbol') }}</label>
+                                <input class="control" id="symbol" name="symbol" value="{{ old('symbol') ?: $currency->symbol }}"/>
+                            </div>
                         </div>
                     </accordian>
 
+                    {!! view_render_event('bagisto.admin.settings.currencies.edit.after') !!}
                 </div>
             </div>
         </form>

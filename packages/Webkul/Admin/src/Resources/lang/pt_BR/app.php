@@ -154,7 +154,8 @@ return [
         'ends-till' => 'Termina Até',
         'per-cust' => 'Por cliente',
         'usage-throttle' => 'Tempos de uso',
-        'for-guest' => 'Para convidados'
+        'for-guest' => 'Para convidados',
+        'refunded' => 'Refunded'
     ],
     'account' => [
         'title' => 'Minha Conta',
@@ -270,6 +271,7 @@ return [
             'item-invoice' => 'Faturado(s) (:qty_invoiced)',
             'item-shipped' => 'Enviado(s) (:qty_shipped)',
             'item-canceled' => 'Cancelado(s) (:qty_canceled)',
+            'item-refunded' => 'Refunded (:qty_refunded)',
             'price' => 'Preço',
             'total' => 'Total',
             'subtotal' => 'Subtotal',
@@ -284,7 +286,9 @@ return [
             'total-paid' => 'Total Pago',
             'total-refunded' => 'Total Estornado',
             'total-due' => 'Total Devido',
-            'cancel-confirm-msg' => 'Tem certeza que deseja cancelar esse pedido ?'
+            'cancel-confirm-msg' => 'Tem certeza que deseja cancelar esse pedido ?',
+            'refunds' => 'Refunds',
+            'refunded' => 'Refunded'
         ],
         'invoices' => [
             'title' => 'Faturas',
@@ -309,6 +313,7 @@ return [
             'creation-error' => 'A criação de fatura de pedido não é permitida.',
             'product-error' => 'A fatura não pode ser criada sem produtos.'
         ],
+
         'shipments' => [
             'title' => 'Entregas',
             'id' => 'Id',
@@ -333,6 +338,29 @@ return [
             'creation-error' => 'A expedição não pode ser criada para este pedido.',
             'order-error' => 'A criação de remessa de pedidos não é permitida.',
             'quantity-invalid' => 'A quantidade solicitada é inválida ou não está disponível.'
+        ],
+
+        'refunds' => [
+            'title' => 'Refunds',
+            'id' => 'Id',
+            'add-title' => 'Create Refund',
+            'save-btn-title' => 'Refund',
+            'order-id' => 'Order Id',
+            'qty-ordered' => 'Qty Ordered',
+            'qty-to-refund' => 'Qty To Refund',
+            'refund-shipping' => 'Refund Shipping',
+            'adjustment-refund' => 'Adjustment Refund',
+            'adjustment-fee' => 'Adjustment Fee',
+            'update-qty' => 'Update Quantities',
+            'invalid-qty' => 'Found invalid quantity for return items.',
+            'refund-limit-error' => 'The most money available to refund is :amount.',
+            'refunded' => 'Refunded',
+            'date' => 'Refund Date',
+            'customer-name' => 'Customer Name',
+            'status' => 'Status',
+            'action' => 'Action',
+            'view-title' => 'Refund #:refund_id',
+            'invalid-refund-amount-error' => 'Refund amount should be non zero.'
         ]
     ],
     'catalog' => [
@@ -366,6 +394,18 @@ return [
             'add-image-btn-title' => 'Add Imagem',
             'mass-delete-success' => 'Todos os índices de produtos selecionados foram excluídos com sucesso',
             'mass-update-success' => 'Todo o índice selecionado de produtos foi atualizado com sucesso',
+            'downloadable' => 'Downloadable Information',
+            'links' => 'Links',
+            'add-link-btn-title' => 'Add Link',
+            'samples' => 'Samples',
+            'add-sample-btn-title' => 'Add Sample',
+            'downloads' => 'Download Allowed',
+            'file' => 'File',
+            'sample' => 'Sample',
+            'upload-file' => 'Upload File',
+            'url' => 'Url',
+            'sort-order' => 'Sort Order',
+            'browse-file' => 'Browse File',
             'configurable-error' => 'Por favor, selecione pelo menos um atributo configurável.',
             'categories' => 'Categorias',
             'images' => 'Imagens',
@@ -377,7 +417,21 @@ return [
             'related-products' => 'Produtos relacionados',
             'product-search-hint' => 'Comece a digitar o nome do produto',
             'no-result-found' => 'Produtos não encontrados com o mesmo nome.',
-            'searching' => 'Procurando ...'
+            'searching' => 'Procurando ...',
+            'grouped-products' => 'Grouped Products',
+            'search-products' => 'Search Products',
+            'no-result-found' => 'Products not found with same name.',
+            'bundle-items' => 'Bundle Items',
+            'add-option-btn-title' => 'Add Option',
+            'option-title' => 'Option Title',
+            'input-type' => 'Input Type',
+            'is-required' => 'Is Required',
+            'select' => 'Select',
+            'radio' => 'Radio',
+            'checkbox' => 'Checkbox',
+            'multiselect' => 'Multiselect',
+            'new-option' => 'New Option',
+            'is-default' => 'Is Default'
         ],
         'attributes' => [
             'title' => 'Atributos',
@@ -530,7 +584,6 @@ return [
             'title' => 'Idiomas',
             'add-title' => 'Add Idioma',
             'edit-title' => 'Editar Idioma',
-            'add-title' => 'Add Idioma',
             'save-btn-title' => 'Salvar Idioma',
             'general' => 'Geral',
             'code' => 'Código',
@@ -636,6 +689,7 @@ return [
         ],
         'sliders' => [
             'title' => 'Sliders',
+            'name' => 'Name',
             'add-title' => 'Criar Slider',
             'edit-title' => 'Editar Slider',
             'save-btn-title' => 'Salvar Slider',
@@ -698,6 +752,9 @@ return [
             'update-error' => 'Erro! Taxas de Impostos Não Poderam ser Atualizadas',
             'delete' => 'Taxas de Impostos Excluídas com Sucesso',
             'atleast-one' => 'Não é Possível Excluir a Última Taxa de Impostos'
+        ],
+        'development' => [
+            'title' => 'Desenvolvimento',
         ]
     ],
     'customers' => [
@@ -972,7 +1029,12 @@ return [
             'logo-image' => 'Logo Imagem',
             'credit-max' => 'Máximo de crédito do cliente',
             'credit-max-value' => 'Valor Máximo de Crédito',
-            'use-credit-max' => 'Use o máximo de crédito'
+            'use-credit-max' => 'Use o máximo de crédito',
+            'order-settings' => 'Order Settings',
+            'orderNumber' => 'Order Number Settings',
+            'order-number-prefix' => 'Order Number Prefix',
+            'order-number-length' => 'Order Number Length',
+            'order-number-suffix' => 'Order Number Suffix',
         ]
     ]
 ];

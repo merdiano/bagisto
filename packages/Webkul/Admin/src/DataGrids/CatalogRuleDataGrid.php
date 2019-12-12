@@ -21,7 +21,7 @@ class CatalogRuleDataGrid extends DataGrid
     {
         $queryBuilder = DB::table('catalog_rules')
                 ->select('id')
-                ->addSelect('id', 'name', 'starts_from', 'ends_till', 'priority', 'status', 'end_other_rules', 'action_type');
+                ->addSelect('id', 'name', 'starts_from', 'ends_till', 'status', 'end_other_rules', 'action_code');
 
         $this->setQueryBuilder($queryBuilder);
     }
@@ -41,7 +41,7 @@ class CatalogRuleDataGrid extends DataGrid
             'index' => 'name',
             'label' => trans('admin::app.datagrid.name'),
             'type' => 'string',
-            'searchable' => false,
+            'searchable' => true,
             'sortable' => true,
             'filterable' => true
         ]);
@@ -49,7 +49,7 @@ class CatalogRuleDataGrid extends DataGrid
         $this->addColumn([
             'index' => 'starts_from',
             'label' => trans('admin::app.datagrid.starts-from'),
-            'type' => 'date',
+            'type' => 'datetime',
             'searchable' => false,
             'sortable' => true,
             'filterable' => true
@@ -58,16 +58,7 @@ class CatalogRuleDataGrid extends DataGrid
         $this->addColumn([
             'index' => 'ends_till',
             'label' => trans('admin::app.datagrid.ends-till'),
-            'type' => 'date',
-            'searchable' => false,
-            'sortable' => true,
-            'filterable' => true
-        ]);
-
-        $this->addColumn([
-            'index' => 'priority',
-            'label' => trans('admin::app.datagrid.priority'),
-            'type' => 'number',
+            'type' => 'datetime',
             'searchable' => false,
             'sortable' => true,
             'filterable' => true
@@ -104,33 +95,26 @@ class CatalogRuleDataGrid extends DataGrid
         ]);
 
         $this->addColumn([
-            'index' => 'action_type',
+            'index' => 'action_code',
             'label' => 'Action Type',
             'type' => 'string',
-            'searchable' => false,
+            'searchable' => true,
             'sortable' => true,
-            'filterable' => true,
-            'wrapper' => function ($value) {
-                foreach(config('pricerules.catalog.actions') as $key => $action) {
-                    if ($value->action_type == $key) {
-                        return trans($action);
-                    }
-                }
-            }
+            'filterable' => true
         ]);
     }
 
     public function prepareActions()
     {
         $this->addAction([
-            'type' => 'Edit',
+            'title' => 'Edit CatalogRule',
             'method' => 'GET', //use post only for redirects only
             'route' => 'admin.catalog-rule.edit',
             'icon' => 'icon pencil-lg-icon'
         ]);
 
         $this->addAction([
-            'type' => 'Delete',
+            'title' => 'Delete CatalogRule',
             'method' => 'POST', //use post only for requests other than redirects
             'route' => 'admin.catalog-rule.delete',
             'icon' => 'icon trash-icon'
