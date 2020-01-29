@@ -54,7 +54,7 @@ class SessionController extends Controller
     public function create()
     {
         request()->validate([
-            'email' => 'required|email',
+            'email' => 'required|numeric',
             'password' => 'required'
         ]);
 
@@ -105,7 +105,7 @@ class SessionController extends Controller
             'last_name' => 'required',
             'gender' => 'required',
             'date_of_birth' => 'nullable|date|before:today',
-            'email' => 'email|unique:customers,email,' . $customer->id,
+            'email' => 'numeric|unique:customers,email,' . $customer->id,
             'password' => 'confirmed|min:6'
         ]);
 

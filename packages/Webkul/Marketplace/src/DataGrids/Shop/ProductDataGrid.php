@@ -39,6 +39,7 @@ class ProductDataGrid extends DataGrid
      */
     public function __construct(SellerRepository $sellerRepository)
     {
+        parent::__construct();
         $this->sellerRepository = $sellerRepository;
     }
 
