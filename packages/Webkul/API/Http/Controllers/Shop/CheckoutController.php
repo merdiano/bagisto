@@ -60,9 +60,9 @@ class CheckoutController extends Controller
 
         auth()->setDefaultDriver($this->guard);
 
-        
+
         // $this->middleware('auth:' . $this->guard);
-        
+
         $this->_config = request('_config');
 
         $this->cartRepository = $cartRepository;
@@ -82,9 +82,13 @@ class CheckoutController extends Controller
     {
         $data = request()->all();
 
-        $data['billing']['address1'] = implode(PHP_EOL, array_filter($data['billing']['address1']));
-        $data['shipping']['address1'] = implode(PHP_EOL, array_filter($data['shipping']['address1']));
-
+//        $data['billing']['address1'] = implode(PHP_EOL, array_filter($data['billing']['address1']));
+//        $data['shipping']['address1'] = implode(PHP_EOL, array_filter($data['shipping']['address1']));
+        $data['billing']['address1'] = 'N/A';
+        $data['billing']['country'] = 'TKM';
+        $data['billing']['state'] = 'N/A';
+        $data['billing']['city'] = 'N/A';
+        $data['billing']['postcode'] = 'N/A';
         if (isset($data['billing']['id']) && str_contains($data['billing']['id'], 'address_')) {
             unset($data['billing']['id']);
             unset($data['billing']['address_id']);
