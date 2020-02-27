@@ -40,6 +40,7 @@ class ProductDataGrid extends DataGrid
     public function __construct(SellerRepository $sellerRepository)
     {
         parent::__construct();
+
         $this->sellerRepository = $sellerRepository;
     }
 
@@ -52,7 +53,7 @@ class ProductDataGrid extends DataGrid
         ->join('marketplace_products', 'product_flat.product_id', '=', 'marketplace_products.product_id')
         ->leftJoin('marketplace_sellers', 'marketplace_products.marketplace_seller_id', '=', 'marketplace_sellers.id')
         ->leftJoin('customers', 'marketplace_sellers.customer_id', '=', 'customers.id')
-
+        ->select('product_flat.product_id')
         ->addSelect('marketplace_products.id as marketplace_product_id', 'product_flat.product_id', 'product_flat.sku', 'product_flat.name', 'marketplace_products.price', 'product_flat.price as product_flat_price', 'marketplace_products.is_owner', 'marketplace_products.is_approved',  DB::raw('CONCAT(customers.first_name, " ", customers.last_name) as seller_name'))
         ->where('marketplace_products.marketplace_seller_id', $seller->id)
         ->where('channel', core()->getCurrentChannelCode())
@@ -127,7 +128,7 @@ class ProductDataGrid extends DataGrid
             'type' => 'number',
             'sortable' => true,
             'searchable' => false,
-            'filterable' => true
+            'filterable' => false
         ]);
 
         $this->addColumn([

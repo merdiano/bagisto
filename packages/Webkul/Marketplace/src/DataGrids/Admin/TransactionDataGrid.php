@@ -57,7 +57,7 @@ class TransactionDataGrid extends DataGrid
         $this->addColumn([
             'index' => 'marketplace_seller_id',
             'label' => trans('marketplace::app.admin.transactions.seller-id'),
-            'type' => 'string',
+            'type' => 'number',
             'sortable' => true,
             'searchable' => true,
             'filterable' => true

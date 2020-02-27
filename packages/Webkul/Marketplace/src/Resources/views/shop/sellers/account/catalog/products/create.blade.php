@@ -35,7 +35,7 @@
 
                 {!! view_render_event('marketplace.sellers.account.catalog.product.create_form_accordian.general.before') !!}
 
-                <accordian :title="'{{ __('admin::app.catalog.products.general') }}'" :active="true">
+                <accordian :title="'{{ __('marketplace::app.admin.products.general') }}'" :active="true">
                     <div slot="body">
 
                         <div class="control-group" :class="[errors.has('type') ? 'has-error' : '']">
@@ -82,7 +82,7 @@
 
                     {!! view_render_event('marketplace.sellers.account.catalog.product.create_form_accordian.configurable_attributes.before') !!}
 
-                    <accordian :title="'{{ __('admin::app.catalog.products.configurable-attributes') }}'" :active="true">
+                    <accordian :title="'{{ __('marketplace::app.admin.products.configurable-attributes') }}'" :active="true">
                         <div slot="body">
 
                             <div class="table">
@@ -131,7 +131,7 @@
             </div>
 
             {!! view_render_event('marketplace.sellers.account.catalog.product.create.after') !!}
-        
+
         </form>
 
     </div>

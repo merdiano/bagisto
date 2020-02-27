@@ -161,6 +161,7 @@
                                 <th>{{ __('shop::app.customer.account.order.view.qty') }}</th>
                                 <th>{{ __('shop::app.customer.account.order.view.subtotal') }}</th>
                                 <th>{{ __('shop::app.customer.account.order.view.tax-amount') }}</th>
+                                <th>{{ __('shop::app.customer.account.order.view.discount') }}</th>
                                 <th>{{ __('shop::app.customer.account.order.view.grand-total') }}</th>
                             </tr>
                         </thead>
@@ -187,7 +188,11 @@
                                     </td>
 
                                     <td>
-                                        {{ core()->formatPrice($baseInvoiceItem->total + $baseInvoiceItem->tax_amount, $sellerInvoice->invoice->order->order_currency_code) }}
+                                        {{ core()->formatPrice($baseInvoiceItem->discount_amount, $sellerInvoice->invoice->order->order_currency_code) }}
+                                    </td>
+
+                                    <td>
+                                        {{ core()->formatPrice($baseInvoiceItem->total + $baseInvoiceItem->tax_amount - $sellerInvoice->discount_amount, $sellerInvoice->invoice->order->order_currency_code) }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -201,25 +206,31 @@
                     <tr>
                         <td>{{ __('shop::app.customer.account.order.view.subtotal') }}</td>
                         <td>-</td>
-                        <td>{{ core()->formatPrice($sellerInvoice->base_sub_total, $sellerInvoice->invoice->order->order_currency_code) }}</td>
+                        <td>{{ core()->formatPrice($sellerInvoice->sub_total, $sellerInvoice->invoice->order->order_currency_code) }}</td>
                     </tr>
 
                     <tr>
                         <td>{{ __('shop::app.customer.account.order.view.shipping-handling') }}</td>
                         <td>-</td>
-                        <td>{{ core()->formatPrice($sellerInvoice->base_shipping_amount, $sellerInvoice->invoice->order->order_currency_code) }}</td>
+                        <td>{{ core()->formatPrice($sellerInvoice->shipping_amount, $sellerInvoice->invoice->order->order_currency_code) }}</td>
                     </tr>
 
                     <tr>
                         <td>{{ __('shop::app.customer.account.order.view.tax') }}</td>
                         <td>-</td>
-                        <td>{{ core()->formatPrice($sellerInvoice->base_tax_amount, $sellerInvoice->invoice->order->order_currency_code) }}</td>
+                        <td>{{ core()->formatPrice($sellerInvoice->tax_amount, $sellerInvoice->invoice->order->order_currency_code) }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{{ __('shop::app.customer.account.order.view.discount') }}</td>
+                        <td>-</td>
+                        <td>{{ core()->formatPrice($sellerInvoice->discount_amount, $sellerInvoice->invoice->order->order_currency_code) }}</td>
                     </tr>
 
                     <tr class="bold">
                         <td>{{ __('shop::app.customer.account.order.view.grand-total') }}</td>
                         <td>-</td>
-                        <td>{{ core()->formatPrice($sellerInvoice->base_grand_total, $sellerInvoice->invoice->order->order_currency_code) }}</td>
+                        <td>{{ core()->formatPrice($sellerInvoice->grand_total, $sellerInvoice->invoice->order->order_currency_code) }}</td>
                     </tr>
                 </table>
 

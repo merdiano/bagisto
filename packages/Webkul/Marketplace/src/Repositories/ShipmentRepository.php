@@ -149,10 +149,12 @@ class ShipmentRepository extends Repository
         }
 
         foreach ($sellers as $seller) {
-            $sellerOrders = $this->orderRepository->findWhere(['order_id' => $shipment->order->id, 'marketplace_seller_id' => $seller->id]);
+            if ($seller) {
+                $sellerOrders = $this->orderRepository->findWhere(['order_id' => $shipment->order->id, 'marketplace_seller_id' => $seller->id]);
 
-            foreach ($sellerOrders as $sellerOrder) {
-                $this->orderRepository->updateOrderStatus($sellerOrder);
+                foreach ($sellerOrders as $sellerOrder) {
+                    $this->orderRepository->updateOrderStatus($sellerOrder);
+                }
             }
         }
 

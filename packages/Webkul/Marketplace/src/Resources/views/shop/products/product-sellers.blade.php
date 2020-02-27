@@ -14,7 +14,7 @@
         @if ($count = $productRepository->getSellerCount($product->product))
             <div class="product-offers">
                 <a href="{{ route('marketplace.product.offers.index', $product->product_id) }}">
-                    {{ 
+                    {{
                         __('marketplace::app.shop.products.seller-count', [
                             'count' => $count
                         ])
@@ -25,7 +25,7 @@
     @else
         <div class="product-offers configurable" style="display: none">
             <a href="{{ route('marketplace.product.offers.index', '_id_') }}">
-                {{ 
+                {{
                     __('marketplace::app.shop.products.seller-count', [
                         'count' => '_count_'
                     ])

@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Webkul\Marketplace\Repositories\SellerRepository;
 use Webkul\Marketplace\Mail\SellerApprovalNotification;
+use Webkul\Marketplace\Repositories\ProductRepository as SellerProduct;
+use Webkul\Product\Repositories\ProductRepository as Product;
 
 /**
  * Admin Seller Controller
@@ -31,16 +33,36 @@ class SellerController extends Controller
     protected $sellerRepository;
 
     /**
+     * ProductRepository object
+     *
+     * @var array
+     */
+    protected $sellerProduct;
+
+    /**
+     * ProductRepository object
+     *
+     * @var array
+     */
+    protected $product;
+
+    /**
      * Create a new controller instance.
      *
-     * @param  Webkul\Marketplace\Repositories\SellerRepository $sellerRepository
+     * @param  Webkul\Marketplace\Repositories\SellerRepository   $sellerRepository
+     * @param  Webkul\Marketplace\Repositories\ProductRepository  $sellerProduct
+     * @param  Webkul\Product\Repositories\ProductRepository      $product
      * @return void
      */
-    public function __construct(SellerRepository $sellerRepository)
+    public function __construct(SellerRepository $sellerRepository, SellerProduct $sellerProduct,  Product $product)
     {
         $this->_config = request('_config');
 
         $this->sellerRepository = $sellerRepository;
+
+        $this->sellerProduct = $sellerProduct;
+
+        $this->product = $product;
     }
 
     /**
@@ -112,12 +134,91 @@ class SellerController extends Controller
                 try {
                     Mail::send(new SellerApprovalNotification($seller));
                 } catch (\Exception $e) {
-
                 }
             }
         }
 
         session()->flash('success', trans('marketplace::app.admin.sellers.mass-update-success'));
+
+        return redirect()->route($this->_config['redirect']);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param  int  $sellerId
+     * @return \Illuminate\Http\Response
+     */
+    public function search($id)
+    {
+        if (request()->ajax()) {
+            $results = [];
+
+            foreach ($this->sellerProduct->searchProducts(request()->input('query')) as $row) {
+                $results[] = [
+                        'id' => $row->product_id,
+                        'sku' => $row->sku,
+                        'name' => $row->name,
+                        'price' => core()->convertPrice($row->price),
+                        'formated_price' => core()->currency(core()->convertPrice($row->price)),
+                        'base_image' => $row->product->base_image_url,
+                    ];
+            }
+
+            return response()->json($results);
+        } else {
+            return view($this->_config['view'], compact('id'));
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param  int  $sellerId,  $productId
+     * @return \Illuminate\Http\Response
+     */
+    public function assignProduct($sellerId, $productId)
+    {
+        $product = $this->sellerProduct->findOneWhere([
+            'product_id' => $productId,
+            'marketplace_seller_id' => $sellerId
+        ]);
+
+        if ($product) {
+            session()->flash('error', 'You are already selling this product..');
+
+            return redirect()->route('admin.marketplace.sellers.index');
+        }
+
+        $baseProduct = $this->product->find($productId);
+
+        $inventorySources = core()->getCurrentChannel()->inventory_sources;
+
+        return view($this->_config['view'], compact('baseProduct', 'inventorySources'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  int  $sellerId,  $productId
+     * @return \Illuminate\Http\Response
+     */
+    public function saveAssignProduct($sellerId, $productId)
+    {
+        $this->validate(request(), [
+            'condition' => 'required',
+            'description' => 'required'
+        ]);
+
+        $data = array_merge(request()->all(), [
+            'product_id' => $productId,
+            'is_owner' => 0,
+            'seller_id' => $sellerId
+        ]);
+
+        $product = $this->sellerProduct->createAssign($data);
+
+        session()->flash('success', 'Product created successfully.');
 
         return redirect()->route($this->_config['redirect']);
     }

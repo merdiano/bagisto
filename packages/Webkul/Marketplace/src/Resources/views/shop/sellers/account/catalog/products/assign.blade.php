@@ -95,16 +95,16 @@
                                     <label>{{ $inventorySource->name }}</label>
 
                                     <input type="text" v-validate="'numeric|min:0'" name="inventories[{{ $inventorySource->id }}]" class="control" value="{{ old('inventories[' . $inventorySource->id . ']') }}" data-vv-as="&quot;{{ $inventorySource->name }}&quot;"/>
-                                    
+
                                     <span class="control-error" v-if="errors.has('inventories[{{ $inventorySource->id }}]')">@{{ errors.first('inventories[{!! $inventorySource->id !!}]') }}</span>
                                 </div>
-                            
+
                             @endforeach
 
                         </div>
                     </accordian>
                 @endif
-            
+
             </div>
 
             @if ($baseProduct->type == 'configurable')
@@ -207,11 +207,11 @@
     </script>
 
     <script>
-        var super_attributes = @json($baseProduct->super_attributes);
+        var super_attributes = @json(app('\Webkul\Product\Repositories\ProductRepository')->getSuperAttributes($baseProduct));
         var variants = @json($baseProduct->variants);
 
         Vue.component('variant-list', {
-            
+
             template: '#variant-list-template',
 
             inject: ['$validator'],

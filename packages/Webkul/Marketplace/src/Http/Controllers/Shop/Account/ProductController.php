@@ -195,7 +195,7 @@ class ProductController extends Controller
             return redirect()->route('marketplace.account.products.edit-assign', ['id' => $sellerProduct->id]);
         }
 
-        $product = $this->product->with(['variants', 'variants.inventories'])->find($id);
+        $product = $this->product->with(['variants', 'variants.inventories'])->findorFail($id);
 
         $categories = $this->getVisibleCategoryTree(core()->getCurrentChannel()->root_category_id);
 

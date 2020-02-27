@@ -61,28 +61,28 @@ class DashboardController extends Controller
      * @var array
      */
     protected $productInventoryRepository;
-    
+
     /**
      * string object
      *
      * @var array
      */
     protected $startDate;
-    
+
     /**
      * string object
      *
      * @var array
      */
     protected $lastStartDate;
-    
+
     /**
      * string object
      *
      * @var array
      */
     protected $endDate;
-    
+
     /**
      * string object
      *
@@ -158,7 +158,15 @@ class DashboardController extends Controller
                         return $query->where('marketplace_orders.marketplace_seller_id', $this->seller->id)
                             ->where('marketplace_orders.created_at', '>=', $this->startDate)
                             ->where('marketplace_orders.created_at', '<=', $this->endDate);
-                    })->sum('base_seller_total'),
+                    })->sum('base_seller_total') - $this->orderRepository->scopeQuery(function($query) {
+                        return $query->where('marketplace_orders.marketplace_seller_id', $this->seller->id)
+                            ->where('marketplace_orders.created_at', '>=', $this->startDate)
+                            ->where('marketplace_orders.created_at', '<=', $this->endDate);
+                    })->sum('base_grand_total_refunded') + $this->orderRepository->scopeQuery(function($query) {
+                        return $query->where('marketplace_orders.marketplace_seller_id', $this->seller->id)
+                            ->where('marketplace_orders.created_at', '>=', $this->startDate)
+                            ->where('marketplace_orders.created_at', '<=', $this->endDate);
+                    })->sum('base_commission_invoiced'),
                 'progress' => $this->getPercentageChange($previous, $current)
             ],
             'avg_sales' =>  [
@@ -171,7 +179,15 @@ class DashboardController extends Controller
                         return $query->where('marketplace_orders.marketplace_seller_id', $this->seller->id)
                             ->where('marketplace_orders.created_at', '>=', $this->startDate)
                             ->where('marketplace_orders.created_at', '<=', $this->endDate);
-                    })->avg('base_seller_total'),
+                    })->avg('base_seller_total') - $this->orderRepository->scopeQuery(function($query) {
+                        return $query->where('marketplace_orders.marketplace_seller_id', $this->seller->id)
+                            ->where('marketplace_orders.created_at', '>=', $this->startDate)
+                            ->where('marketplace_orders.created_at', '<=', $this->endDate);
+                    })->avg('base_grand_total_refunded') + $this->orderRepository->scopeQuery(function($query) {
+                        return $query->where('marketplace_orders.marketplace_seller_id', $this->seller->id)
+                            ->where('marketplace_orders.created_at', '>=', $this->startDate)
+                            ->where('marketplace_orders.created_at', '<=', $this->endDate);
+                    })->avg('base_commission_invoiced'),
                 'progress' => $this->getPercentageChange($previous, $current)
             ],
             'top_selling_products' => $this->getTopSellingProducts(),
@@ -187,7 +203,7 @@ class DashboardController extends Controller
                             ->where('marketplace_orders.created_at', '>=', $interval['start'])
                             ->where('marketplace_orders.created_at', '<=', $interval['end']);
                     })->sum('base_seller_total');
-                
+
             $statistics['sale_graph']['total'][] = $total;
             $statistics['sale_graph']['formated_total'][] = core()->formatBasePrice($total);
         }
@@ -273,11 +289,11 @@ class DashboardController extends Controller
      */
     public function setStartEndDate()
     {
-        $this->startDate = request()->get('start') 
+        $this->startDate = request()->get('start')
             ? Carbon::createFromTimeString(request()->get('start') . " 00:00:01")
             : Carbon::createFromTimeString(Carbon::now()->subDays(30)->format('Y-m-d') . " 00:00:01");
 
-        $this->endDate = request()->get('end') 
+        $this->endDate = request()->get('end')
             ? Carbon::createFromTimeString(request()->get('end') . " 23:59:59")
             : Carbon::now();
 

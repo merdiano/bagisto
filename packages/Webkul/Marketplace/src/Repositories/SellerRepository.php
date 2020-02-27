@@ -7,6 +7,8 @@ use Illuminate\Container\Container as App;
 use Webkul\Core\Eloquent\Repository;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Webkul\Product\Repositories\ProductInventoryRepository;
+use Webkul\Marketplace\Repositories\OrderItemRepository;
 use Event;
 
 /**
@@ -25,18 +27,29 @@ class SellerRepository extends Repository
     protected $orderItemRepository;
 
     /**
+     * ProductInventoryRepository object
+     *
+     * @var array
+     */
+    protected $productInventoryRepository;
+
+    /**
      * Create a new repository instance.
      *
-     * @param  Webkul\Marketplace\Repositories\OrderItemRepository $orderItemRepository
-     * @param  Illuminate\Container\Container                      $app
+     * @param  Webkul\Marketplace\Repositories\OrderItemRepository    $orderItemRepository
+     * @param  Webkul\Product\Repositories\ProductInventoryRepository $productInventoryRepository
+     * @param  Illuminate\Container\Container                         $app
      * @return void
      */
     public function __construct(
         OrderItemRepository $orderItemRepository,
+        ProductInventoryRepository $productInventoryRepository,
         App $app
     )
     {
         $this->orderItemRepository = $orderItemRepository;
+
+        $this->productInventoryRepository = $productInventoryRepository;
 
         parent::__construct($app);
     }
@@ -170,10 +183,43 @@ class SellerRepository extends Repository
             ->addSelect(DB::raw('SUM(qty_ordered) as total_qty_ordered'))
             ->groupBy('marketplace_sellers.id')
             ->where('marketplace_sellers.shop_title', '<>', NULL)
+            // ->where('marketplace_sellers.is_approved', 0)
             ->orderBy('total_qty_ordered', 'DESC')
             ->limit(4)
             ->get();
 
         return $result;
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function delete($id)
+    {
+        Event::fire('marketplace.seller.delete.before', $id);
+
+        parent::delete($id);
+
+        Event::fire('marketplace.seller.delete.after', $id);
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function deleteInventory($id)
+    {
+        $inventories = $this->productInventoryRepository->findWhere([
+            'vendor_id' => $id
+        ]);
+
+        if (count($inventories)) {
+            foreach ($inventories as $inventory) {
+                if (isset ($inventory)) {
+                    $this->productInventoryRepository->delete($inventory->id);
+                }
+            }
+        }
     }
 }

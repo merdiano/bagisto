@@ -44,6 +44,7 @@ class OrderDataGrid extends DataGrid
     public function __construct(SellerRepository $sellerRepository)
     {
         parent::__construct();
+
         $this->sellerRepository = $sellerRepository;
     }
 
@@ -52,7 +53,7 @@ class OrderDataGrid extends DataGrid
         $queryBuilder = DB::table('marketplace_orders')
                 ->leftJoin('orders', 'marketplace_orders.order_id', '=', 'orders.id')
                 ->leftJoin('marketplace_transactions', 'marketplace_orders.id', '=', 'marketplace_transactions.marketplace_order_id')
-                ->select('orders.id', 'marketplace_orders.order_id', 'marketplace_orders.base_sub_total', 'marketplace_orders.base_grand_total', 'marketplace_orders.base_commission', 'marketplace_orders.base_seller_total', 'marketplace_orders.base_seller_total_invoiced', 'marketplace_orders.created_at', 'marketplace_orders.status', 'is_withdrawal_requested', 'seller_payout_status', 'marketplace_orders.marketplace_seller_id')
+                ->select('orders.id', 'marketplace_orders.order_id', 'marketplace_orders.base_sub_total', 'marketplace_orders.base_grand_total', 'marketplace_orders.base_commission', 'marketplace_orders.base_seller_total', 'marketplace_orders.base_seller_total_invoiced', 'marketplace_orders.created_at', 'marketplace_orders.status', 'is_withdrawal_requested', 'seller_payout_status', 'marketplace_orders.marketplace_seller_id', 'marketplace_orders.base_discount_amount')
                 ->addSelect(DB::raw('CONCAT(orders.customer_first_name, " ", orders.customer_last_name) as customer_name'))
                 ->addSelect(DB::raw('SUM(marketplace_transactions.base_total) as total_paid'))
                 ->groupBy('marketplace_orders.id');
@@ -163,6 +164,15 @@ class OrderDataGrid extends DataGrid
         ]);
 
         $this->addColumn([
+            'index' => 'base_discount_amount',
+            'label' => trans('marketplace::app.admin.orders.discount'),
+            'type' => 'price',
+            'searchable' => false,
+            'sortable' => true,
+            'filterable' => true
+        ]);
+
+        $this->addColumn([
             'index' => 'base_seller_total',
             'label' => trans('marketplace::app.admin.orders.seller-total'),
             'type' => 'price',
@@ -226,6 +236,8 @@ class OrderDataGrid extends DataGrid
             'wrapper' => function($row) {
                 if ($row->seller_payout_status == 'paid') {
                     return trans('marketplace::app.admin.orders.already-paid');
+                } else if ($row->seller_payout_status == 'refunded') {
+                    return trans('marketplace::app.admin.orders.refunded');
                 } else {
                     $remaining = ! is_null($row->total_paid) ? $row->base_seller_total_invoiced - $row->total_paid : $row->base_seller_total_invoiced;
 

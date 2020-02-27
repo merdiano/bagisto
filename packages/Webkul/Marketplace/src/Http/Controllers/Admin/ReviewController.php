@@ -27,7 +27,7 @@ class ReviewController extends Controller
      * @var array
     */
     protected $reviewRepository;
-    
+
     /**
      * Create a new controller instance.
      *
@@ -49,7 +49,7 @@ class ReviewController extends Controller
      * @return Mixed
      */
     public function index($url)
-    {   
+    {
         return view($this->_config['view']);
     }
 
@@ -74,7 +74,7 @@ class ReviewController extends Controller
                 ], $reviewId);
         }
 
-        session()->flash('success', trans('marketplace::app.admin.products.mass-update-success'));
+        session()->flash('success', trans('marketplace::app.admin.reviews.mass-update-success'));
 
         return redirect()->route($this->_config['redirect']);
     }

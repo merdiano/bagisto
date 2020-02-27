@@ -11,7 +11,7 @@
             <div class="page-title">
                 <h1>{{ __('marketplace::app.admin.sellers.title') }}</h1>
             </div>
-            
+
             <div class="page-action">
             </div>
         </div>

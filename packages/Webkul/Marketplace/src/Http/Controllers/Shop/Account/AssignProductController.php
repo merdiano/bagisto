@@ -96,7 +96,7 @@ class AssignProductController extends Controller
                         'sku' => $row->sku,
                         'name' => $row->name,
                         'price' => core()->convertPrice($row->price),
-                        'formated_price' => core()->currency(core()->convertPrice($row->price)),
+                        'formated_price' => core()->currency($row->price),
                         'base_image' => $row->product->base_image_url,
                     ];
             }
@@ -168,7 +168,7 @@ class AssignProductController extends Controller
      */
     public function edit($id)
     {
-        $product = $this->sellerProduct->find($id);
+        $product = $this->sellerProduct->findorFail($id);
 
         if ($product->parent) {
             return redirect()->route('marketplace.account.products.edit-assign', ['id' => $product->parent->id]);

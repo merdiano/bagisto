@@ -53,7 +53,7 @@ class Order
      */
     public function afterOrderCancel($order)
     {
-        $this->order->create(['order' => $order]);
+        $this->order->cancel(['order' => $order]);
     }
 
         /**

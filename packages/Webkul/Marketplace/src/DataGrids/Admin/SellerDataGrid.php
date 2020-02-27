@@ -77,6 +77,18 @@ class SellerDataGrid extends DataGrid
         ]);
 
         $this->addColumn([
+            'index' => 'product',
+            'label' => trans('marketplace::app.admin.sellers.product'),
+            'type' => 'string',
+            'searchable' => false,
+            'sortable' => false,
+            'closure' => true,
+            'wrapper' => function($row) {
+                return '<a href = "' . route('admin.marketplace.seller.product.search', $row->id) . '" class="btn btn-sm btn-primary pay-btn" name="seller_id" value="' . $row->id .'">' . trans('marketplace::app.admin.sellers.add-product') . '</a>';
+            }
+        ]);
+
+        $this->addColumn([
             'index' => 'is_approved',
             'label' => trans('marketplace::app.admin.sellers.is-approved'),
             'type' => 'boolean',

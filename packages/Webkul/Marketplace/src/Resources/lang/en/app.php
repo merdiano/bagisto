@@ -75,7 +75,7 @@ return [
                     'policies' => 'Policies',
                     'return_policy' => 'Return Policy',
                     'shipping_policy' => 'Shipping Policy',
-                    'privacy_policy' => 'privacy Policy',
+                    'privacy_policy' => 'Privacy Policy',
                     'seo' => 'SEO',
                     'meta_title' => 'Meta Title',
                     'meta_description' => 'Meta Description',
@@ -130,6 +130,7 @@ return [
                         'view-title' => 'Order #:order_id',
                         'info' => 'Information',
                         'invoices' => 'Invoices',
+                        'refunds' => 'Refunds',
                         'shipments' => 'Shipments',
                         'placed-on' => 'Placed On',
                         'status' => 'Status',
@@ -244,7 +245,7 @@ return [
             ],
 
             'products' => [
-                'title' => 'Products - :shop_title'
+                'title' => 'Products - :shop_title',
             ],
 
             'mails' => [
@@ -298,6 +299,7 @@ return [
             'product-approval-required' => 'Product Approval Required',
             'can-create-invoice' => 'Seller Can Create Invoice',
             'can-create-shipment' => 'Seller Can Create Shipment',
+            'can_cancel_order' => 'Seller Can Cancel Order',
             'yes' => 'Yes',
             'no' => 'No',
             'landing-page' => 'Landing Page',
@@ -348,7 +350,15 @@ return [
             'update' => 'Update',
             'delete-success-msg' => 'Seller deleted successfully.',
             'mass-delete-success' => 'Selected sellers deleted successfully.',
-            'mass-update-success' => 'Selected sellers updated successfully.'
+            'mass-update-success' => 'Selected sellers updated successfully.',
+            'product'  => 'Product',
+            'add-product' => 'Add Product',
+            'search' => 'Search',
+            'search-product' => 'Search Product',
+            'assign-product' => 'Assign Product to Seller',
+            'commission' => 'Commission',
+            'change-commission' => 'Change Commission',
+            'commission-percentage' => 'Commission Percentage'
         ],
 
         'orders' => [
@@ -359,6 +369,7 @@ return [
             'sub-total' => 'Sub Total',
             'grand-total' => 'Grand Total',
             'commission' => 'Commission',
+            'discount' => 'Discount',
             'seller-total' => 'Seller Total',
             'total-paid' => 'Paid',
             'remaining-total' => 'Remaining',
@@ -384,7 +395,8 @@ return [
             'comment' => 'Comment',
             'payment-success-msg' => 'Payment has been successfully done for this seller',
             'order-not-exist' => 'Order not exist',
-            'no-amount-to-paid' => 'No amount left to paid to this seller.'
+            'no-amount-to-paid' => 'No amount left to paid to this seller.',
+            'refunded' => 'Refunded',
         ],
 
         'transactions' => [
@@ -428,6 +440,8 @@ return [
             'unapprove' => 'Unapprove',
             'delete' => 'Delete',
             'update' => 'Update',
+            'configurable-attributes' => 'Configurable Attributes',
+            'general' => 'General',
             'delete-success-msg' => 'Product deleted successfully.',
             'mass-delete-success' => 'Selected products deleted successfully.',
             'mass-update-success' => 'Selected products updated successfully.'
@@ -446,6 +460,7 @@ return [
             'approve' => 'Approve',
             'unapprove' => 'Unapprove',
             'update' => 'Update',
+            'mass-update-success' => 'Selected reviews updated successfully.'
         ],
 
         'response' => [

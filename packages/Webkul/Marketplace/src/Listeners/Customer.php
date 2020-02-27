@@ -81,4 +81,13 @@ class Customer
             }
         }
     }
+
+    /**
+     * Delete inventory of seller after delete
+     *
+     * @param mixed $id
+     */
+    public function afterSellerDelete($id) {
+        $this->seller->deleteInventory($id);
+    }
 }

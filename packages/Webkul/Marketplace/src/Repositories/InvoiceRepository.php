@@ -162,10 +162,12 @@ class InvoiceRepository extends Repository
         }
 
         foreach ($sellers as $seller) {
-            foreach ($this->orderRepository->findWhere(['order_id' => $invoice->order->id, 'marketplace_seller_id' => $seller->id]) as $order) {
-                $this->orderRepository->collectTotals($order);
+            if ($seller) {
+                foreach ($this->orderRepository->findWhere(['order_id' => $invoice->order->id, 'marketplace_seller_id' => $seller->id]) as $order) {
+                    $this->orderRepository->collectTotals($order);
 
-                $this->orderRepository->updateOrderStatus($order);
+                    $this->orderRepository->updateOrderStatus($order);
+                }
             }
         }
 
@@ -184,6 +186,7 @@ class InvoiceRepository extends Repository
         $sellerInvoice->tax_amount = $sellerInvoice->base_tax_amount = 0;
         $sellerInvoice->shipping_amount = $sellerInvoice->base_shipping_amount = 0;
         $sellerInvoice->grand_total = $sellerInvoice->base_grand_total = 0;
+        $sellerInvoice->discount_amount = $sellerInvoice->base_discount_amount = 0;
 
         foreach ($sellerInvoice->items as $sellerInvoiceItem) {
             $sellerInvoice->sub_total += $sellerInvoiceItem->item->total;
@@ -191,6 +194,9 @@ class InvoiceRepository extends Repository
 
             $sellerInvoice->tax_amount += $sellerInvoiceItem->item->tax_amount;
             $sellerInvoice->base_tax_amount += $sellerInvoiceItem->item->base_tax_amount;
+
+            $sellerInvoice->discount_amount += $sellerInvoiceItem->item->discount_amount;
+            $sellerInvoice->base_discount_amount += $sellerInvoiceItem->item->base_discount_amount;
         }
 
         $sellerInvoice->shipping_amount = $sellerInvoice->order->shipping_amount;
@@ -205,8 +211,8 @@ class InvoiceRepository extends Repository
             }
         }
 
-        $sellerInvoice->grand_total = $sellerInvoice->sub_total + $sellerInvoice->tax_amount + $sellerInvoice->shipping_amount;
-        $sellerInvoice->base_grand_total = $sellerInvoice->base_sub_total + $sellerInvoice->base_tax_amount + $sellerInvoice->base_shipping_amount;
+        $sellerInvoice->grand_total = $sellerInvoice->sub_total + $sellerInvoice->tax_amount + $sellerInvoice->shipping_amount - $sellerInvoice->discount_amount;
+        $sellerInvoice->base_grand_total = $sellerInvoice->base_sub_total + $sellerInvoice->base_tax_amount + $sellerInvoice->base_shipping_amount - $sellerInvoice->base_discount_amount;
 
         $sellerInvoice->save();
 

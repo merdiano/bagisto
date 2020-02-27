@@ -11,10 +11,10 @@
 
 @section('content-wrapper')
 
-    <?php 
+    <?php
         $baseProduct = $product->parent_id ? $product->parent : $product;
 
-        $productRepository = app('Webkul\Marketplace\Repositories\ProductRepository'); 
+        $productRepository = app('Webkul\Marketplace\Repositories\ProductRepository');
     ?>
 
     {!! view_render_event('bagisto.shop.sellers.products.offers.before', ['product' => $product]) !!}
@@ -51,13 +51,13 @@
                             <?php $options = []; ?>
 
                             @foreach ($baseProduct->super_attributes as $attribute)
-                            
+
                                 @foreach ($attribute->options as $option)
 
                                     @if ($product->{$attribute->code} == $option->id)
 
                                         <?php $attributes[$attribute->id] = $option->id; ?>
-                                        
+
                                         <?php array_push($options, $attribute->name . ' : ' . $option->label); ?>
 
                                     @endif
@@ -81,14 +81,14 @@
 
             </div>
         </div>
-        
+
         <div class="seller-product-list">
             <h2 class="heading">{{ __('marketplace::app.shop.products.more-sellers') }}</h2>
 
             <div class="content">
 
                 @foreach ($productRepository->getSellerProducts($product) as $sellerProduct)
-                
+
                     <form action="{{ route('cart.add', $baseProduct->id) }}" method="POST">
                         @csrf()
                         <input type="hidden" name="product" value="{{ $baseProduct->id }}">
@@ -132,11 +132,11 @@
                                                         <span class="stars">
                                                             <span class="icon star-icon"></span>
 
-                                                            {{ 
+                                                            {{
                                                                 __('marketplace::app.shop.products.seller-total-rating', [
                                                                         'avg_rating' => $reviewRepository->getAverageRating($sellerProduct->seller),
                                                                         'total_rating' => $reviewRepository->getTotalRating($sellerProduct->seller),
-                                                                    ]) 
+                                                                    ])
                                                             }}
                                                         </span>
 
@@ -160,7 +160,7 @@
                                                 <div class="control-group">
                                                     <input type="text" name="quantity" value="1" class="control">
                                                 </div>
-                                                
+
                                                 @if ($sellerProduct->haveSufficientQuantity(1))
 
                                                     <button type="submit" class="btn btn-black btn-lg">
@@ -190,7 +190,7 @@
                                         <div class="product-images-block">
                                             <carousel :per-page="1" pagination-active-color="#979797" pagination-color="#E8E8E8">
                                                 @foreach ($productImages as $productImage)
-                                                    
+
                                                     <slide>
                                                         <div class="product-image">
                                                             <img src="{{ $productImage['medium_image_url'] }}" />
@@ -214,15 +214,25 @@
                         </div>
 
                     </form>
-                    
+
                 @endforeach
 
             </div>
 
         </div>
 
-    </div>     
+    </div>
 
     {!! view_render_event('bagisto.shop.sellers.products.offers.after', ['product' => $product]) !!}
 
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function(){
+            $(".VueCarousel-dot").click(function(event){
+                event.preventDefault();
+            });
+        });
+    </script>
+@endpush

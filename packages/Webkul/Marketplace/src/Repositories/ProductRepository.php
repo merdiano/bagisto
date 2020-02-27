@@ -162,7 +162,12 @@ class ProductRepository extends Repository
     {
         Event::fire('marketplace.catalog.assign-product.create.before');
 
-        $seller = $this->sellerRepository->findOneByField('customer_id', auth()->guard('customer')->user()->id);
+        if (isset($data['seller_id']) && auth()->guard('admin')->user()) {
+            $seller = $this->sellerRepository->findOneByField('id', $data['seller_id']);
+            unset($data['seller_id']);
+        } else if (auth()->guard('customer')->user()) {
+            $seller = $this->sellerRepository->findOneByField('customer_id', auth()->guard('customer')->user()->id);
+        }
 
         $sellerProduct = parent::create(array_merge($data, [
                 'marketplace_seller_id' => $seller->id,
@@ -363,6 +368,8 @@ class ProductRepository extends Repository
                         ->where('marketplace_products.marketplace_seller_id', $seller->id)
                         ->where('marketplace_products.is_approved', 1);
 
+                        $qb->addSelect(DB::raw('(CASE WHEN marketplace_products.is_owner = 0 THEN marketplace_products.price ELSE product_flat.price END) AS price'));
+
                 $queryBuilder = $qb->leftJoin('product_flat as flat_variants', function($qb) use($channel, $locale) {
                     $qb->on('product_flat.id', '=', 'flat_variants.parent_id')
                         ->where('flat_variants.channel', $channel)
@@ -396,7 +403,7 @@ class ProductRepository extends Repository
                                         }
                                     });
                                 } else {
-                                    $query2 = $query2->where($column, '>=', current($queryParams))->where($column, '<=', end($queryParams));
+                                    $query2 = $query2->where($column, '>=', core()      ->convertToBasePrice(current($queryParams)))->where($column, '<=',  core()->convertToBasePrice(end($queryParams)));
                                 }
                             }
                         });
@@ -463,9 +470,12 @@ class ProductRepository extends Repository
     public function getSellerCount($product)
     {
         return $this->scopeQuery(function($query) use($product) {
-                return $query->where('marketplace_products.product_id', $product->id)
+                return $query
+                        // ->leftJoin('marketplace_sellers', 'marketplace_sellers.id', 'marketplace_products.marketplace_seller_id')
+                        ->where('marketplace_products.product_id', $product->id)
                         ->where('marketplace_products.is_owner', 0)
                         ->where('marketplace_products.is_approved', 1);
+                        // ->where('marketplace_sellers.is_approved', 0);
             })->count('id');
     }
 

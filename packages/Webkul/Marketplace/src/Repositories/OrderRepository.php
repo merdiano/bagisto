@@ -5,6 +5,8 @@ namespace Webkul\Marketplace\Repositories;
 use Illuminate\Container\Container as App;
 use Webkul\Core\Eloquent\Repository;
 use Illuminate\Support\Facades\Event;
+use Webkul\Sales\Repositories\OrderItemRepository as OrderItem;
+use Webkul\Sales\Repositories\OrderRepository as Order;
 
 /**
  * Seller Order Reposotory
@@ -43,12 +45,28 @@ class OrderRepository extends Repository
     protected $productRepository;
 
     /**
+     * Order object
+     *
+     * @var Object
+     */
+    protected $order;
+
+    /**
+     * OrderItem object
+     *
+     * @var Object
+     */
+    protected $orderItem;
+
+    /**
      * Create a new repository instance.
      *
      * @param  Webkul\Product\Repositories\SellerRepository      $sellerRepository
      * @param  Webkul\Product\Repositories\OrderItemRepository   $orderItemRepository
      * @param  Webkul\Product\Repositories\TransactionRepository $transactionRepository
      * @param  Webkul\Product\Repositories\ProductRepository     $productRepository
+     * @param  Webkul\Sales\Repositories\OrderItemRepository     $orderItem
+     * @param  Webkul\Sales\Repositories\OrderRepository         $Order;
      * @param  Illuminate\Container\Container                    $app
      * @return void
      */
@@ -57,6 +75,8 @@ class OrderRepository extends Repository
         OrderItemRepository $orderItemRepository,
         TransactionRepository $transactionRepository,
         ProductRepository $productRepository,
+        OrderItem $orderItem,
+        Order $order,
         App $app
     )
     {
@@ -67,6 +87,10 @@ class OrderRepository extends Repository
         $this->transactionRepository = $transactionRepository;
 
         $this->productRepository = $productRepository;
+
+        $this->orderItem = $orderItem;
+
+        $this->order = $order;
 
         parent::__construct($app);
     }
@@ -116,6 +140,10 @@ class OrderRepository extends Repository
             if (! $sellerProduct->is_approved)
                 continue;
 
+            if ($seller->commission_enable) {
+                $commissionPercentage = $seller->commission_percentage;
+            }
+
             $sellerOrder = $this->findOneWhere([
                     'order_id' => $order->id,
                     'marketplace_seller_id' => $seller->id,
@@ -128,7 +156,9 @@ class OrderRepository extends Repository
                         'order_id' => $order->id,
                         'marketplace_seller_id' => $seller->id,
                         'commission_percentage' => $commissionPercentage,
-                        'is_withdrawal_requested' => 0
+                        'is_withdrawal_requested' => 0,
+                        'shipping_amount' => $order->shipping_amount,
+                        'base_shipping_amount' => $order->base_shipping_amount
                     ]);
             }
 
@@ -177,13 +207,38 @@ class OrderRepository extends Repository
     }
 
     /**
-     * @param int $order
+     * @param array $data
      * @return mixed
      */
-    public function cancel($order)
+    public function cancel(array $data)
     {
+        $order = $data['order'];
 
         $sellerOrders = $this->findWhere(['order_id' => $order->id]);
+
+        foreach ($sellerOrders as $sellerOrder) {
+            Event::fire('marketplace.sales.order.cancel.before', $sellerOrder);
+
+            $this->updateOrderStatus($sellerOrder);
+
+            Event::fire('marketplace.sales.order.cancel.after', $sellerOrder);
+        }
+    }
+
+    /**
+     * @param int $orderId
+     * @return mixed
+     */
+    public function sellerCancelOrder($orderId)
+    {
+        $seller = $this->sellerRepository->findOneWhere([
+            'customer_id' => auth()->guard('customer')->user()->id
+        ]);
+
+        $sellerOrders = $this->findWhere([
+            'order_id' => $orderId,
+            'marketplace_seller_id' => $seller->id
+        ]);
 
         foreach ($sellerOrders as $sellerOrder) {
             if (! $sellerOrder->canCancel())
@@ -192,10 +247,21 @@ class OrderRepository extends Repository
             Event::fire('marketplace.sales.order.cancel.before', $sellerOrder);
 
             foreach ($sellerOrder->items as $item) {
-                // $this->orderItemRepository->returnQtyToProductInventory($item);
+                if ($item->item->qty_to_cancel) {
+                    $this->orderItem->returnQtyToProductInventory($item->item);
+
+                    $item->item->qty_canceled += $item->item->qty_to_cancel;
+
+                    $item->item->save();
+                }
             }
 
             $this->updateOrderStatus($sellerOrder);
+
+            $result = $this->order->isInCanceledState($sellerOrder->order);
+
+            if ($result)
+                $sellerOrder->order->update(["status" => "canceled"]);
 
             Event::fire('marketplace.sales.order.cancel.after', $sellerOrder);
 
@@ -308,6 +374,7 @@ class OrderRepository extends Repository
         $order->commission = $order->base_commission = 0;
         $order->seller_total = $order->base_seller_total = 0;
         $order->total_item_count = $order->total_qty_ordered = 0;
+        $order->discount_amount = $order->base_discount_amount = 0;
 
         $shippingCodes = explode('_', $order->order->shipping_method);
         $carrier = current($shippingCodes);
@@ -325,9 +392,14 @@ class OrderRepository extends Repository
         }
 
         foreach ($order->items()->get() as $sellerOrderItem) {
+
             $item = $sellerOrderItem->item;
-            $order->grand_total += $item->total + $item->tax_amount;
-            $order->base_grand_total += $item->base_total + $item->base_tax_amount;
+
+            $order->discount_amount += $item->discount_amount;
+            $order->base_discount_amount += $item->base_discount_amount;
+            $order->grand_total = $item->total + $item->tax_amount - $item->discount_amount;
+
+            $order->base_grand_total = $item->base_total + $item->base_tax_amount - $item->base_discount_amount;
 
             $order->sub_total += $item->total;
             $order->base_sub_total += $item->base_total;
@@ -358,6 +430,8 @@ class OrderRepository extends Repository
         $order->shipping_invoiced = $order->base_shipping_invoiced = 0;
         $order->commission_invoiced = $order->base_commission_invoiced = 0;
         $order->seller_total_invoiced = $order->base_seller_total_invoiced = 0;
+        $order->base_grand_total_invoiced = $order->grand_total_invoiced = 0;
+        $order->base_tax_amount_invoiced = $order->tax_amount_invoiced = 0;
 
         foreach ($order->invoices as $invoice) {
             $order->sub_total_invoiced += $invoice->sub_total;
@@ -372,7 +446,6 @@ class OrderRepository extends Repository
             $order->discount_amount_invoiced += $invoice->discount_amount;
             $order->base_discount_amount_invoiced += $invoice->base_discount_amount;
 
-
             $order->commission_invoiced += $commissionInvoiced = ($invoice->sub_total * $order->commission_percentage) / 100;
             $order->base_commission_invoiced += $baseCommissionInvoiced = ($invoice->base_sub_total * $order->commission_percentage) / 100;
 
@@ -380,8 +453,26 @@ class OrderRepository extends Repository
             $order->base_seller_total_invoiced += $invoice->base_sub_total - $baseCommissionInvoiced - $invoice->base_discount_amount + $invoice->base_shipping_amount + $invoice->base_tax_amount;
         }
 
-        $order->grand_total_invoiced = $order->sub_total_invoiced + $order->shipping_invoiced + $order->tax_amount_invoiced - $order->discount_invoiced;
-        $order->base_grand_total_invoiced = $order->base_sub_total_invoiced + $order->base_shipping_invoiced + $order->base_tax_amount_invoiced - $order->base_discount_invoiced;
+        $order->grand_total_invoiced = $order->sub_total_invoiced + $order->shipping_invoiced + $order->tax_amount_invoiced - $order->discount_amount_invoiced;
+        $order->base_grand_total_invoiced = $order->base_sub_total_invoiced + $order->base_shipping_invoiced + $order->base_tax_amount_invoiced - $order->base_discount_amount_invoiced;
+
+        foreach ($order->refunds as $refund) {
+            $order->sub_total_refunded += $refund->sub_total;
+            $order->base_sub_total_refunded += $refund->base_sub_total;
+
+            $order->shipping_refunded += $refund->shipping_amount;
+            $order->base_shipping_refunded += $refund->base_shipping_amount;
+
+            $order->tax_amount_refunded += $refund->tax_amount;
+            $order->base_tax_amount_refunded += $refund->base_tax_amount;
+
+            $order->discount_refunded += $refund->discount_amount;
+            $order->base_discount_refunded += $refund->base_discount_amount;
+        }
+
+        $order->grand_total_refunded = $order->sub_total_refunded + $order->shipping_refunded + $order->tax_amount_refunded - $order->discount_refunded;
+
+        $order->base_grand_total_refunded = $order->base_sub_total_refunded + $order->base_shipping_refunded + $order->base_tax_amount_refunded - $order->base_discount_refunded;
 
         $order->save();
 

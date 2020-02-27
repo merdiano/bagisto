@@ -87,6 +87,14 @@ class Order extends Model implements OrderContract
     }
 
     /**
+     * Get the order Refunds record associated with the order.
+     */
+    public function refunds()
+    {
+        return $this->hasMany(RefundProxy::modelClass(), 'marketplace_order_id');
+    }
+
+    /**
      * Get the transactions items record associated with the order.
      */
     public function transactions()
@@ -118,13 +126,13 @@ class Order extends Model implements OrderContract
     {
         if ($this->status == 'fraud')
             return false;
-            
+
         foreach ($this->items as $sellerOrderItem) {
             if ($sellerOrderItem->item->qty_to_invoice > 0) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -135,7 +143,7 @@ class Order extends Model implements OrderContract
     {
         if ($this->status == 'fraud')
             return false;
-            
+
         foreach ($this->items as $sellerOrderItem) {
             if ($sellerOrderItem->item->qty_to_cancel > 0) {
                 return true;

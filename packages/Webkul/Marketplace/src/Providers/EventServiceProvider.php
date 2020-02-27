@@ -51,7 +51,11 @@ class EventServiceProvider extends ServiceProvider
 
         Event::listen('sales.invoice.save.after', 'Webkul\Marketplace\Listeners\Invoice@afterInvoice');
 
+        Event::listen('sales.refund.save.after', 'Webkul\Marketplace\Listeners\Refund@afterRefund');
+
         Event::listen('sales.order.cancel.after', 'Webkul\Marketplace\Listeners\Order@afterOrderCancel');
+
+        Event::listen('marketplace.seller.delete.after','Webkul\Marketplace\Listeners\Customer@afterSellerDelete');
 
 
         //Send sales mails

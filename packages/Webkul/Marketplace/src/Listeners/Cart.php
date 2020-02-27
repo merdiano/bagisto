@@ -116,12 +116,12 @@ class Cart
 
                 $cartItem->save();
             } else {
-                $cartItem->custom_price = 0;
+                $cartItem->custom_price = NULL;
             }
 
             $cartItem->save();
         } else {
-            $cartItem->custom_price = 0;
+            $cartItem->custom_price = NULL;
 
             $cartItem->save();
         }

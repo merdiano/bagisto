@@ -73,6 +73,19 @@ return [
                         'value' => false
                     ]
                 ]
+            ], [
+                'name' => 'can_cancel_order',
+                'title' => 'marketplace::app.admin.system.can_cancel_order',
+                'type' => 'select',
+                'options' => [
+                    [
+                        'title' => 'marketplace::app.admin.system.yes',
+                        'value' => true
+                    ], [
+                        'title' => 'marketplace::app.admin.system.no',
+                        'value' => false
+                    ]
+                ]
             ]
         ]
     ], [

@@ -226,8 +226,8 @@
     </script>
 
     <script>
-        var super_attributes = @json($product->product->super_attributes);
-        var variants = @json($product->product->variants);
+        var super_attributes = @json(app('\Webkul\Product\Repositories\ProductRepository')->getSuperAttributes($product->product));
+        var variants = @json($product->product->variants()->with(['inventories'])->get());
         var assignVariants = @json($product->variants);
 
         Vue.component('variant-list', {

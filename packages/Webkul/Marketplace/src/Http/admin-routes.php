@@ -55,6 +55,17 @@ Route::group(['middleware' => ['web']], function () {
                 'redirect' => 'admin.marketplace.products.index'
             ])->name('admin.marketplace.products.massupdate');
 
+            Route::get('seller/product/search/{id}', 'Webkul\Marketplace\Http\Controllers\Admin\SellerController@search')->defaults('_config', [
+                'view' => 'marketplace::admin.sellers.products.search'
+            ])->name('admin.marketplace.seller.product.search');
+
+            Route::get('seller/product/assign/{seller_id}/{product_id?}', 'Webkul\Marketplace\Http\Controllers\Admin\SellerController@assignProduct')->defaults('_config', [
+                'view' => 'marketplace::admin.sellers.products.assign'
+            ])->name('admin.marketplace.seller.product.create');
+
+            Route::post('seller/product/assign/{seller_id}/{product_id?}', 'Webkul\Marketplace\Http\Controllers\Admin\SellerController@saveAssignProduct')->defaults('_config', [
+                'redirect' => 'admin.marketplace.sellers.index'
+            ])->name('admin.marketplace.seller.product.store');
 
             //Seller review routes
             Route::get('reviews', 'Webkul\Marketplace\Http\Controllers\Admin\ReviewController@index')->defaults('_config', [
@@ -64,6 +75,11 @@ Route::group(['middleware' => ['web']], function () {
             Route::post('reviews/massupdate', 'Webkul\Marketplace\Http\Controllers\Admin\ReviewController@massUpdate')->defaults('_config', [
                 'redirect' => 'admin.marketplace.reviews.index'
             ])->name('admin.marketplace.reviews.massupdate');
+
+            //customer edit routes
+            Route::put('customers/edit/{id}', 'Webkul\Marketplace\Http\Controllers\Admin\CustomerController@update')->defaults('_config', [
+                'redirect' => 'admin.customer.index'
+            ])->name('admin.customer.update');
 
         });
 

@@ -39,6 +39,18 @@ class MarketplaceServiceProvider extends ServiceProvider
         ], 'public');
 
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'marketplace');
+
+        $this->publishes([
+            __DIR__ . '/../Resources/views/shop/sellers/products/add-buttons.blade.php' => resource_path('views/vendor/shop/products/add-buttons.blade.php'),
+        ]);
+
+        $this->publishes([
+            __DIR__ . '/../Resources/views/shop/sellers/products/price.blade.php' => resource_path('views/vendor/shop/products/price.blade.php'),
+        ]);
+
+        $this->publishes([
+            __DIR__ . '/../Resources/views/admin/customers/edit.blade.php' => resource_path('views/vendor/admin/customers/edit.blade.php'),
+        ]);
     }
 
     /**
@@ -50,7 +62,7 @@ class MarketplaceServiceProvider extends ServiceProvider
     {
         $this->registerConfig();
     }
-    
+
     /**
      * Register package config.
      *

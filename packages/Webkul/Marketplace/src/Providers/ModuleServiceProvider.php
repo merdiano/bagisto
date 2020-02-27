@@ -18,5 +18,7 @@ class ModuleServiceProvider extends BaseModuleServiceProvider
         \Webkul\Marketplace\Models\Invoice::class,
         \Webkul\Marketplace\Models\InvoiceItem::class,
         \Webkul\Marketplace\Models\Transaction::class,
+        \Webkul\Marketplace\Models\Refund::class,
+        \Webkul\Marketplace\Models\RefundItem::class,
     ];
 }

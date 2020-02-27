@@ -163,7 +163,7 @@ class InvoiceController extends Controller
      */
     public function print($id)
     {
-        $sellerInvoice = $this->invoice->find($id);
+        $sellerInvoice = $this->invoice->findOneByField('marketplace_order_id', $id);
 
         $pdf = PDF::loadView('marketplace::shop.sellers.account.sales.invoices.pdf', compact('sellerInvoice'))->setPaper('a4');
 

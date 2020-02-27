@@ -110,7 +110,7 @@ class ProductDataGrid extends DataGrid
             'type' => 'number',
             'sortable' => true,
             'searchable' => false,
-            'filterable' => true
+            'filterable' => false
         ]);
 
         $this->addColumn([
