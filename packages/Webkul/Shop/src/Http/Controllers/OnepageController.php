@@ -85,11 +85,11 @@ class OnepageController extends Controller
 
 //        $data['billing']['address1'] = implode(PHP_EOL, array_filter($data['billing']['address1']));
 //        $data['shipping']['address1'] = implode(PHP_EOL, array_filter($data['shipping']['address1']));
-        $data['address1'] = 'N/A';
-        $data['country'] = 'TKM';
-        $data['state'] = 'N/A';
-        $data['city'] = 'N/A';
-        $data['postcode'] = 'N/A';
+        $data['billing']['address1'] = 'N/A';
+        $data['billing']['country'] = 'TKM';
+        $data['billing']['state'] = 'N/A';
+        $data['billing']['city'] = 'N/A';
+        $data['billing']['postcode'] = 'N/A';
 
         if (Cart::hasError() || !Cart::saveCustomerAddress($data) || ! $rates = Shipping::collectRates())
             return response()->json(['redirect_url' => route('shop.checkout.cart.index')], 403);
