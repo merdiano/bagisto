@@ -32,15 +32,15 @@ class CustomerAddressForm extends FormRequest
             ];
         } else {
             $this->rules = [
-                'billing.first_name' => ['required'],
-                'billing.last_name' => ['required'],
-                'billing.email' => ['required'],
-                'billing.address1' => ['required'],
-                'billing.city' => ['required'],
-                'billing.state' => ['required'],
-                'billing.postcode' => ['required'],
+//                'billing.first_name' => ['required'],
+//                'billing.last_name' => ['required'],
+//                'billing.email' => ['required'],
+//                'billing.address1' => ['required'],
+//                'billing.city' => ['required'],
+//                'billing.state' => ['required'],
+//                'billing.postcode' => ['required'],
                 'billing.phone' => ['required'],
-                'billing.country' => ['required']
+//                'billing.country' => ['required']
             ];
         }
 
