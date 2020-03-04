@@ -91,7 +91,8 @@
         "Webkul\\Rule\\": "packages/Webkul/Rule/src",
         "Webkul\\CartRule\\": "packages/Webkul/CartRule/src",
         "Webkul\\CatalogRule\\": "packages/Webkul/CatalogRule/src",
-        "Webkul\\CMS\\": "packages/Webkul/CMS/src"
+        "Webkul\\CMS\\": "packages/Webkul/CMS/src",
+          "Webkul\\Marketplace\\": "packages/Webkul/Marketplace"
       }
     },
     "autoload-dev": {
