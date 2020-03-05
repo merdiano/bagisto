@@ -61,7 +61,7 @@ $provinces = app('Webkul\Core\Repositories\CountryStateRepository')->all();
 <script type="text/x-template" id="province-item-template">
     <li>
         <a :href="url+'/provinces/'+this.item.code">
-            @{{ default_name }}&emsp;
+            @{{ name }}&emsp;
             <i class="icon dropdown-right-icon" v-if="haveChildren && item.parent_id != null"></i>
         </a>
 
@@ -115,7 +115,7 @@ $provinces = app('Webkul\Core\Repositories\CountryStateRepository')->all();
                     });
                 }
 
-                return this.item.name;
+                return this.item.default_name;
             }
         },
 
