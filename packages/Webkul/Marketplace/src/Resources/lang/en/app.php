@@ -20,6 +20,7 @@ return [
             'features' => 'Attracting Features',
             'features-info' => 'Want to start an online business? Before any decision, please check our unbeatable features.',
             'popular-sellers' => 'Popular Sellers',
+            'province-sellers' => 'Province Sellers',
             'setup-title' => 'Really Easy to Setup',
             'setup-info' => 'Setting an ecommerce store and customization is really very easy.',
             'setup-1' => 'Create An Account',

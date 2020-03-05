@@ -68,7 +68,7 @@ class SellerController extends Controller
             ->where('state',$code)
             ->paginate();
 
-        return view($this->_config['view'],compact('sellers'));
+        return view($this->_config['view'],compact(['sellers','code']));
     }
 
     /**

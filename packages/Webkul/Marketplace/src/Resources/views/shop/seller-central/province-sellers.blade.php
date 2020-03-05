@@ -10,7 +10,7 @@
         @if ($sellers->count())
             <div class="popular-sellers-container">
                 <div class="popular-sellers-heading">
-                    {{ __('marketplace::app.shop.marketplace.popular-sellers') }}
+                    {{$code}}   {{ __('marketplace::app.shop.marketplace.popular-sellers') }}
                 </div>
 
                 <div class="popular-sellers-list">
