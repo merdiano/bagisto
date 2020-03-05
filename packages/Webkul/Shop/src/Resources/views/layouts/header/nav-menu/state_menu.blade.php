@@ -2,15 +2,10 @@
 
 <?php
 
-$categories = [];
-
-foreach (app('Webkul\Category\Repositories\CategoryRepository')->getVisibleCategoryTree(core()->getCurrentChannel()->root_category_id) as $category) {
-    if ($category->slug)
-        array_push($categories, $category);
-}
+$provinces = app('Webkul\Core\Repositories\CountryStateRepository')->all();
 ?>
 
-<category-nav categories='@json($categories)' url="{{url()->to('/')}}"></category-nav>
+<province-nav categories='@json($provinces)' url="{{url()->to('/')}}"></province-nav>
 
 {!! view_render_event('bagisto.shop.layout.header.category.after') !!}
 
@@ -18,27 +13,27 @@ foreach (app('Webkul\Category\Repositories\CategoryRepository')->getVisibleCateg
 @push('scripts')
 
 
-<script type="text/x-template" id="category-nav-template">
+<script type="text/x-template" id="province-nav-template">
 
     <ul class="nav">
-        <category-item
+        <province-item
             v-for="(item, index) in items"
             :key="index"
             :url="url"
             :item="item"
             :parent="index">
-        </category-item>
+        </province-item>
     </ul>
 
 </script>
 
 <script>
-    Vue.component('category-nav', {
+    Vue.component('province-nav', {
 
-        template: '#category-nav-template',
+        template: '#province-nav-template',
 
         props: {
-            categories: {
+            provinces: {
                 type: [Array, String, Object],
                 required: false,
                 default: (function () {
@@ -57,15 +52,15 @@ foreach (app('Webkul\Category\Repositories\CategoryRepository')->getVisibleCateg
 
         computed: {
             items: function() {
-                return JSON.parse(this.categories)
+                return JSON.parse(this.provinces)
             }
         },
     });
 </script>
 
-<script type="text/x-template" id="category-item-template">
+<script type="text/x-template" id="province-item-template">
     <li>
-        <a :href="url+'/categories/'+this.item['translations'][0].slug">
+        <a :href="url+'/provinces/'+this.item['translations'][0].slug">
             @{{ name }}&emsp;
             <i class="icon dropdown-right-icon" v-if="haveChildren && item.parent_id != null"></i>
         </a>
@@ -74,20 +69,20 @@ foreach (app('Webkul\Category\Repositories\CategoryRepository')->getVisibleCateg
         v-if="haveChildren"  @click="showOrHide"></i>
 
         <ul v-if="haveChildren && show">
-            <category-item
+            <province-item
                 v-for="(child, index) in item.children"
                 :key="index"
                 :url="url"
                 :item="child">
-            </category-item>
+            </province-item>
         </ul>
     </li>
 </script>
 
 <script>
-    Vue.component('category-item', {
+    Vue.component('province-item', {
 
-        template: '#category-item-template',
+        template: '#province-item-template',
 
         props: {
             item:  Object,
