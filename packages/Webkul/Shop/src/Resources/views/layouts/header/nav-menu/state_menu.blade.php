@@ -5,7 +5,7 @@
 $provinces = app('Webkul\Core\Repositories\CountryStateRepository')->all();
 ?>
 
-<province-nav categories='@json($provinces)' url="{{url()->to('/')}}"></province-nav>
+<province-nav provinces='@json($provinces)' url="{{url()->to('/')}}"></province-nav>
 
 {!! view_render_event('bagisto.shop.layout.header.category.after') !!}
 
@@ -60,8 +60,8 @@ $provinces = app('Webkul\Core\Repositories\CountryStateRepository')->all();
 
 <script type="text/x-template" id="province-item-template">
     <li>
-        <a :href="url+'/provinces/'+this.item['translations'][0].slug">
-            @{{ name }}&emsp;
+        <a :href="url+'/provinces/'+this.item.code">
+            @{{ default_name }}&emsp;
             <i class="icon dropdown-right-icon" v-if="haveChildren && item.parent_id != null"></i>
         </a>
 
