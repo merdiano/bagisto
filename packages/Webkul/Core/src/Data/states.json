@@ -3,35 +3,35 @@
         "id":1,
         "country_code":"TM",
         "code":"AG",
-        "name":"Aşgabat",
+        "default_name":"Aşgabat",
         "country_id":234
     },
     {
         "id":2,
         "country_code":"TM",
         "code":"AH",
-        "name":"Ahal",
+        "default_name":"Ahal",
         "country_id":234
     },
     {
         "id":3,
         "country_code":"TM",
         "code":"BN",
-        "name":"Balkan",
+        "default_name":"Balkan",
         "country_id":234
     },
     {
         "id":4,
         "country_code":"TM",
         "code":"DZ",
-        "name":"Daşoguz",
+        "default_name":"Daşoguz",
         "country_id":234
     },
     {
         "id":5,
         "country_code":"TM",
         "code":"LB",
-        "name":"Lebap",
+        "default_name":"Lebap",
         "country_id":234
     },
     {
