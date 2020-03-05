@@ -61,21 +61,8 @@ $provinces = app('Webkul\Core\Repositories\CountryStateRepository')->all();
 <script type="text/x-template" id="province-item-template">
     <li>
         <a :href="url+'/provinces/'+this.item.code">
-            @{{ name }}&emsp;
-            <i class="icon dropdown-right-icon" v-if="haveChildren && item.parent_id != null"></i>
+            @{{ province_name }}&emsp;
         </a>
-
-        <i :class="[show ? 'icon icon-arrow-down mt-15' : 'icon dropdown-right-icon left mt-15']"
-        v-if="haveChildren"  @click="showOrHide"></i>
-
-        <ul v-if="haveChildren && show">
-            <province-item
-                v-for="(child, index) in item.children"
-                :key="index"
-                :url="url"
-                :item="child">
-            </province-item>
-        </ul>
     </li>
 </script>
 
@@ -103,11 +90,8 @@ $provinces = app('Webkul\Core\Repositories\CountryStateRepository')->all();
         },
 
         computed: {
-            haveChildren: function() {
-                return this.item.children.length ? true : false;
-            },
 
-            name: function() {
+            province_name: function() {
                 if (this.item.translations && this.item.translations.length) {
                     this.item.translations.forEach(function(translation) {
                         if (translation.locale == document.documentElement.lang)
