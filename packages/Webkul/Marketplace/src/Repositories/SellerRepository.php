@@ -81,6 +81,12 @@ class SellerRepository extends Repository
         );
     }
 
+
+    public function findByProvince($code)
+    {
+        //todo filter by $code
+        return $this->all();
+    }
     /**
      * @param array $data
      * @param $id

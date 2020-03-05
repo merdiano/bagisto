@@ -51,10 +51,22 @@ class SellerController extends Controller
      */
     public function show($url)
     {
-        
+
         $seller = $this->seller->findByUrlOrFail($url);
 
         return view($this->_config['view'], compact('seller'));
+    }
+
+    /**
+     * Show Sellers by province Code
+     * @param $code
+     * @return \Illuminate\Http\Response
+     */
+    public function showSellers($code){
+
+        $sellers = $this->seller->where('state',$code)->paginate(20);
+
+        return view($this->_config['view'],compact('sellers'));
     }
 
     /**

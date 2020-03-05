@@ -20,6 +20,8 @@ class MarketplaceServiceProvider extends ServiceProvider
     {
         include __DIR__ . '/../Http/front-routes.php';
 
+        include __DIR__ . '/../Http/shop-routes.php';
+
         include __DIR__ . '/../Http/admin-routes.php';
 
         $this->app->register(ModuleServiceProvider::class);
