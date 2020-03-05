@@ -38,7 +38,7 @@
         "id":6,
         "country_code":"TM",
         "code":"MR",
-        "name":"Mary",
+        "default_name":"Mary",
         "country_id":234
     }
 ]
