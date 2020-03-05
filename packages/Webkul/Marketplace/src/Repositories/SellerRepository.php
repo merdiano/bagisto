@@ -81,11 +81,6 @@ class SellerRepository extends Repository
         );
     }
 
-
-    public function findByProvince($code)
-    {
-        return $this->findByField('state', $code, $columns = ['*']);
-    }
     /**
      * @param array $data
      * @param $id

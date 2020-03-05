@@ -64,8 +64,9 @@ class SellerController extends Controller
      */
     public function showSellers($code){
 
-        $sellers = $this->seller->findByProvince($code)
-            ->paginate(20);
+        $sellers = $this->seller->getModel()
+            ->where('state',$code)
+            ->paginate();
 
         return view($this->_config['view'],compact('sellers'));
     }
