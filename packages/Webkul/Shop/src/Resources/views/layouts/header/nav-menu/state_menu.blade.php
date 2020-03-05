@@ -60,7 +60,7 @@ $provinces = app('Webkul\Core\Repositories\CountryStateRepository')->all();
 
 <script type="text/x-template" id="province-item-template">
     <li>
-        <a :href="url+'/provinces/'+this.item.code">
+        <a :href="url+'/province/'+this.item.code+'/sellers'">
             @{{ province_name }}&emsp;
         </a>
     </li>

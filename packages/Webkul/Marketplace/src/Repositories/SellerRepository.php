@@ -84,8 +84,7 @@ class SellerRepository extends Repository
 
     public function findByProvince($code)
     {
-        //todo filter by $code
-        return $this->all();
+        return $this->findByField('state', $code, $columns = ['*']);
     }
     /**
      * @param array $data
