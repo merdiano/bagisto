@@ -3,7 +3,6 @@
 return [
     'security-warning' => 'Suspicious Activity Found!!!',
     'nothing-to-delete' => 'Nothing to delete',
-
     'layouts' => [
         'my-account' => 'My Account',
         'profile' => 'Profile',
@@ -12,12 +11,10 @@ return [
         'wishlist' => 'Wishlist',
         'orders' => 'Orders',
     ],
-
     'common' => [
         'error' => 'Something went wrong, please try again later.',
         'no-result-found' => 'We could not find any records.'
     ],
-
     'home' => [
         'page-title' => 'Bagisto - Home',
         'featured-products' => 'Featured Products',
@@ -25,7 +22,6 @@ return [
         'verify-email' => 'Verify Your Email Account',
         'resend-verify-email' => 'Resend Verification Email'
     ],
-
     'header' => [
         'title' => 'Account',
         'dropdown-text' => 'Manage Cart, Orders & Wishlist',
@@ -39,21 +35,18 @@ return [
         'logout' => 'Logout',
         'search-text' => 'Search products here'
     ],
-
     'minicart' => [
         'view-cart' => 'View Shopping Cart',
         'checkout' => 'Checkout',
         'cart' => 'Cart',
         'zero' => '0'
     ],
-
     'footer' => [
         'subscribe-newsletter' => 'Subscribe Newsletter',
         'subscribe' => 'Subscribe',
         'locale' => 'Locale',
         'currency' => 'Currency',
     ],
-
     'subscription' => [
         'unsubscribe' => 'Unsubcribe',
         'subscribe' => 'Subscribe',
@@ -64,14 +57,12 @@ return [
         'already-unsub' => 'You Are Already Unsubscribed',
         'not-subscribed' => 'Error! Mail Cannot Be Sent Currently, Please Try Again Later'
     ],
-
     'search' => [
         'no-results' => 'No Results Found',
         'page-title' => 'Bagisto - Search',
         'found-results' => 'Search Results Found',
         'found-result' => 'Search Result Found'
     ],
-
     'reviews' => [
         'title' => 'Title',
         'add-review-page-title' => 'Add Review',
@@ -87,13 +78,11 @@ return [
         'id-star' => 'star',
         'name' => 'Name'
     ],
-
     'customer' => [
         'signup-text' => [
             'account_exists' => 'Already have an account',
             'title' => 'Sign In'
         ],
-
         'signup-form' => [
             'page-title' => 'Customer - Registration Form',
             'title' => 'Sign Up',
@@ -120,12 +109,10 @@ return [
             'dont-have-account' => 'You Do Not Have Account With Us',
             'customer-registration' => 'Customer Registered Successfully'
         ],
-
         'login-text' => [
             'no_account' => 'Do not have account',
             'title' => 'Sign Up',
         ],
-
         'login-form' => [
             'page-title' => 'Customer - Login',
             'title' => 'Sign In',
@@ -140,14 +127,12 @@ return [
             'not-activated' => 'Your activation seeks admin approval',
             'resend-verification' => 'Resend Verification Mail Again'
         ],
-
         'forgot-password' => [
             'title' => 'Recover Password',
             'email' => 'Email',
             'submit' => 'Submit',
             'page_title' => 'Customer - Forgot Password Form'
         ],
-
         'reset-password' => [
             'title' => 'Reset Password',
             'email' => 'Registered Email',
@@ -156,22 +141,18 @@ return [
             'back-link-title' => 'Back to Sign In',
             'submit-btn-title' => 'Reset Password'
         ],
-
         'account' => [
             'dashboard' => 'Customer - Edit Profile',
             'menu' => 'Menu',
-
             'profile' => [
                 'index' => [
                     'page-title' => 'Customer - Profile',
                     'title' => 'Profile',
                     'edit' => 'Edit',
                 ],
-
                 'edit-success' => 'Profile Updated Successfully',
                 'edit-fail' => 'Error! Profile Cannot Be Updated, Please Try Again Later',
                 'unmatch' => 'The Old Password Does Not Match',
-
                 'fname' => 'First Name',
                 'lname' => 'Last Name',
                 'gender' => 'Gender',
@@ -182,13 +163,11 @@ return [
                 'password' => 'Password',
                 'cpassword' => 'Confirm Password',
                 'submit' => 'Update Profile',
-
                 'edit-profile' => [
                     'title' => 'Edit Profile',
                     'page-title' => 'Customer - Edit Profile Form'
                 ]
             ],
-
             'address' => [
                 'index' => [
                     'page-title' => 'Customer - Address',
@@ -204,7 +183,6 @@ return [
                     'confirm-delete' =>  'Do you really want to delete this address?',
                     'default-delete' => 'Default Address Cannot Be Changed'
                 ],
-
                 'create' => [
                     'page-title' => 'Customer - Add Address Form',
                     'title' => 'Add Address',
@@ -219,7 +197,6 @@ return [
                     'success' => 'Address have been successfully added.',
                     'error' => 'Address cannot be added.'
                 ],
-
                 'edit' => [
                     'page-title' => 'Customer - Edit Address',
                     'title' => 'Edit Address',
@@ -232,7 +209,6 @@ return [
                     'failure' => 'Address Cannot Be Deleted'
                 ]
             ],
-
             'order' => [
                 'index' => [
                     'page-title' => 'Customer - Orders',
@@ -243,7 +219,6 @@ return [
                     'total' => 'Total',
                     'order_number' => 'Order Number'
                 ],
-
                 'view' => [
                     'page-tile' => 'Order #:order_id',
                     'info' => 'Information',
@@ -292,20 +267,17 @@ return [
                     'adjustment-fee' => 'Adjustment Fee',
                 ]
             ],
-
             'review' => [
                 'index' => [
                     'title' => 'Reviews',
                     'page-title' => 'Customer - Reviews'
                 ],
-
                 'view' => [
                     'page-tile' => 'Review #:id',
                 ]
             ]
         ]
     ],
-
     'products' => [
         'layered-nav-title' => 'Shop By',
         'price-label' => 'As low as',
@@ -343,7 +315,6 @@ return [
         'select-above-options' => 'Please select above options first.',
         'less-quantity' => 'Quantity can not be less than one.'
     ],
-
     'wishlist' => [
         'title' => 'Wishlist',
         'deleteall' => 'Delete All',
@@ -362,15 +333,9 @@ return [
         'empty' => 'You do not have any items in your wishlist',
         'remove-all-success' => 'All the items from your wishlist have been removed',
     ],
-
-    // 'reviews' => [
-    //     'empty' => 'You Have Not Reviewed Any Of Product Yet'
-    // ]
-
     'buynow' => [
         'no-options' => 'Please Select Options Before Buying This Product'
     ],
-
     'checkout' => [
         'cart' => [
             'integrity' => [
@@ -396,20 +361,17 @@ return [
                 'inventory_warning' => 'The Requested Quantity Is Not Available, Please Try Again Later',
                 'error' => 'Cannot Update The Item(s) At The Moment, Please Try Again Later'
             ],
-
             'item' => [
                 'error_remove' => 'No Items To Remove From The Cart',
                 'success' => 'Item Was Successfully Added To Cart',
                 'success-remove' => 'Item Was Removed Successfully From The Cart',
                 'error-add' => 'Item Cannot Be Added To Cart, Please Try Again Later',
             ],
-
             'quantity-error' => 'Requested Quantity Is Not Available',
             'cart-subtotal' => 'Cart Subtotal',
             'cart-remove-action' => 'Do you really want to do this ?',
             'partial-cart-update' => 'Only some of the product(s) were updated',
         ],
-
         'onepage' => [
             'title' => 'Checkout',
             'information' => 'Information',
@@ -458,7 +420,6 @@ return [
             'flat-desc' => 'This is a flat rate',
             'enter-coupon-code' => 'Enter Coupon Code'
         ],
-
         'total' => [
             'order-summary' => 'Order Summary',
             'sub-total' => 'Items',
@@ -477,7 +438,6 @@ return [
             'success-coupon' => 'Coupon code applied successfully.',
             'coupon-apply-issue' => 'Coupon code can\'t be applied.'
         ],
-
         'success' => [
             'title' => 'Order successfully placed',
             'thanks' => 'Thank you for your order!',
@@ -485,7 +445,6 @@ return [
             'info' => 'We will email you, your order details and tracking information'
         ]
     ],
-
     'mail' => [
         'order' => [
             'subject' => 'New Order Confirmation',
@@ -531,13 +490,11 @@ return [
                 'thanks' => 'Thanks!',
             ]
         ],
-
         'invoice' => [
             'heading' => 'Your Invoice #:invoice_id for Order #:order_id',
             'subject' => 'Invoice for your order #:order_id',
             'summary' => 'Summary of Invoice',
         ],
-
         'shipment' => [
             'heading' => 'Shipment #:shipment_id  has been generated for Order #:order_id',
             'inventory-heading' => 'New Shipment #:shipment_id had been generated for Order #:order_id',
@@ -548,7 +505,6 @@ return [
             'tracking-number' => 'Tracking Number',
             'greeting' => 'An Order :order_id has been placed on :created_at',
         ],
-
         'refund' => [
             'heading' => 'Your Refund #:refund_id for Order #:order_id',
             'subject' => 'Refund for your order #:order_id',
@@ -556,7 +512,6 @@ return [
             'adjustment-refund' => 'Adjustment Refund',
             'adjustment-fee' => 'Adjustment Fee'
         ],
-
         'forget-password' => [
             'subject' => 'Customer Reset Password',
             'dear' => 'Dear :name',
@@ -565,7 +520,6 @@ return [
             'final-summary' => 'If you did not request a password reset, no further action is required',
             'thanks' => 'Thanks!'
         ],
-
         'customer' => [
             'new' => [
                 'dear' => 'Dear :customer_name',
@@ -576,7 +530,6 @@ return [
                 Your account details are below: ',
                 'thanks' => 'Thanks!',
             ],
-
             'registration' => [
                 'subject' => 'New Customer Registration',
                 'customer-registration' => 'Customer Registered Successfully',
@@ -585,7 +538,6 @@ return [
                 'summary' => 'Your account has now been created successfully and you can login using your email address and password credentials. Upon logging in, you will be able to access other services including reviewing past orders, wishlists and editing your account information.',
                 'thanks' => 'Thanks!',
             ],
-
             'verification' => [
                 'heading' => 'Bagisto - Email Verification',
                 'subject' => 'Verification Mail',
@@ -593,7 +545,6 @@ return [
                 'summary' => 'This is the mail to verify that the email address you entered is yours.
                 Kindly click the Verify Your Account button below to verify your account.'
             ],
-
             'subscription' => [
                 'subject' => 'Subscription Email',
                 'greeting' => ' Welcome to Bagisto - Email Subscription',
@@ -603,11 +554,9 @@ return [
             ]
         ]
     ],
-
     'webkul' => [
         'copy-right' => 'Powered by <a href="https://bagisto.com/" target="_blank">Bagisto</a>, A Community Project by <a href="https://webkul.com/" target="_blank">Webkul</a>',
     ],
-
     'response' => [
         'create-success' => ':name created successfully.',
         'update-success' => ':name updated successfully.',

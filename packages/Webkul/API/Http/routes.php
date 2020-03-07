@@ -1,14 +1,14 @@
 <?php
 
 Route::group(['prefix' => 'api'], function ($router) {
-    
+
     Route::group(['namespace' => 'Webkul\API\Http\Controllers\Shop', 'middleware' => ['locale', 'theme', 'currency']], function ($router) {
         //Currency and Locale switcher
         Route::get('switch-currency', 'CoreController@switchCurrency');
 
         Route::get('switch-locale', 'CoreController@switchLocale');
-        
-        
+
+
         //Category routes
         Route::get('categories', 'ResourceController@index')->defaults('_config', [
             'repository' => 'Webkul\Category\Repositories\CategoryRepository',
@@ -108,7 +108,10 @@ Route::group(['prefix' => 'api'], function ($router) {
 
         Route::get('country-states', 'CoreController@getCountryStateGroup');
 
-
+        Route::get('sellers','ResourceController@index')->defaults('_config',[
+            'repository' => 'Webkul\Marketplace\Repositories\SellerRepository',
+            'resource' => 'Webkul\API\Http\Resources\Marketplace\Seller'
+        ]);
         //Slider routes
         Route::get('sliders', 'ResourceController@index')->defaults('_config', [
             'repository' => 'Webkul\Core\Repositories\SliderRepository',
