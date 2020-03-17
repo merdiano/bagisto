@@ -69,6 +69,7 @@ class CartController extends Controller
     public function get()
     {
         $customer = auth($this->guard)->user();
+        return $customer;
 
         $cart = Cart::getCart();
 
