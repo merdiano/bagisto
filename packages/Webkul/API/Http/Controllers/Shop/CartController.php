@@ -66,12 +66,15 @@ class CartController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function get()
+    public function get(CartRepository $cartRepository)
     {
         $customer = auth($this->guard)->user();
-        return $customer;
 
-        $cart = Cart::getCart();
+        if($customer)
+            $cart = Cart::getCart();
+        else{
+            $cart = $cartRepository->firstOrCreate();
+        }
 
         return response()->json([
             'data' => $cart ? new CartResource($cart) : null
