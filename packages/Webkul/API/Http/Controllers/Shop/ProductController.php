@@ -25,14 +25,6 @@ class ProductController extends Controller
     protected $productRepository;
 
     /**
-     * SellerRepository object
-     *
-     * @var array
-     */
-    protected $sellerRepository;
-
-    protected $marketProductRepository;
-    /**
      * Create a new controller instance.
      *
      * @param  Webkul\Product\Repositories\ProductRepository $productRepository
@@ -40,13 +32,9 @@ class ProductController extends Controller
      * @param  Webkul\Marketplace\Repositories\ProductRepository $marketProductRepository
      * @return void
      */
-    public function __construct(ProductRepository $productRepository,
-                                SellerRepository $sellerRepository,
-                                MarketPlaceProductRepository $marketProductRepository)
+    public function __construct(ProductRepository $productRepository)
     {
         $this->productRepository = $productRepository;
-        $this->sellerRepository = $sellerRepository;
-        $this->marketProductRepository = $marketProductRepository;
     }
 
     /**
@@ -59,9 +47,10 @@ class ProductController extends Controller
         return ProductResource::collection($this->productRepository->getAll(request()->input('category_id')));
     }
 
-    public function sellerProducts($url){
-        $seller = $this->sellerRepository->findByUrlOrFail($url);
-        return $this->marketProductRepository->findAllBySeller($seller);
+    public function sellerProducts($url,SellerRepository $sellerRepository,
+                                   MarketPlaceProductRepository $marketProductRepository){
+        $seller = $sellerRepository->findByUrlOrFail($url);
+        return $marketProductRepository->findAllBySeller($seller);
     }
     /**
      * Returns a individual resource.
