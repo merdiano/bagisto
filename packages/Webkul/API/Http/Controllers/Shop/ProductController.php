@@ -4,6 +4,8 @@ namespace Webkul\API\Http\Controllers\Shop;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Webkul\Marketplace\Repositories\SellerRepository;
+use Webkul\Marketplace\Repositories\ProductRepository as MarketPlaceProductRepository;
 use Webkul\Product\Repositories\ProductRepository;
 use Webkul\API\Http\Resources\Catalog\Product as ProductResource;
 
@@ -23,14 +25,28 @@ class ProductController extends Controller
     protected $productRepository;
 
     /**
+     * SellerRepository object
+     *
+     * @var array
+     */
+    protected $sellerRepository;
+
+    protected $marketProductRepository;
+    /**
      * Create a new controller instance.
      *
      * @param  Webkul\Product\Repositories\ProductRepository $productRepository
+     * @param  Webkul\Marketplace\Repositories\SellerRepository $sellerRepository
+     * @param  Webkul\Marketplace\Repositories\ProductRepository $marketProductRepository
      * @return void
      */
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductRepository $productRepository,
+                                SellerRepository $sellerRepository,
+                                MarketPlaceProductRepository $marketProductRepository)
     {
         $this->productRepository = $productRepository;
+        $this->sellerRepository = $sellerRepository;
+        $this->marketProductRepository = $marketProductRepository;
     }
 
     /**
@@ -43,6 +59,10 @@ class ProductController extends Controller
         return ProductResource::collection($this->productRepository->getAll(request()->input('category_id')));
     }
 
+    public function sellerProducts($url){
+        $seller = $this->seller->findByUrlOrFail($url);
+        return $this->marketProductRepository->findAllBySeller($seller);
+    }
     /**
      * Returns a individual resource.
      *
