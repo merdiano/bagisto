@@ -60,7 +60,7 @@ class ProductController extends Controller
     }
 
     public function sellerProducts($url){
-        $seller = $this->seller->findByUrlOrFail($url);
+        $seller = $this->sellerRepository->findByUrlOrFail($url);
         return $this->marketProductRepository->findAllBySeller($seller);
     }
     /**
