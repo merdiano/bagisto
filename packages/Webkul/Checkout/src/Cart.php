@@ -265,6 +265,8 @@ class Cart {
 
         $product = $this->product->findOneByField('id', $id);
 
+        dd($id,$product);
+
         if ($product->type == 'configurable') {
             if (! isset($data['selected_configurable_option']) || ! $data['selected_configurable_option']) {
                 return false;
@@ -831,7 +833,7 @@ class Cart {
         }
 
         $quantities = 0;
-        
+
         foreach ($cart->items as $item) {
             $quantities = $quantities + $item->quantity;
         }
