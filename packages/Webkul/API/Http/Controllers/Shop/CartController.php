@@ -70,11 +70,7 @@ class CartController extends Controller
     {
         $customer = auth($this->guard)->user();
 
-        if($customer)
-            $cart = Cart::getCart();
-        else{
-            $cart = $cartRepository->firstOrCreate();
-        }
+        $cart = Cart::getCart();
 
         return response()->json([
             'data' => $cart ? new CartResource($cart) : null
